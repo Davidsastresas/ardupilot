@@ -621,7 +621,7 @@ const AP_Param::Info Copter::var_info[] = {
 #if VISCA == ENABLED
     // @group: VISCA
     // @Path : ../libraries/AP_Visca_Camera/AP_Visca_Camera.cpp
-    GOBJECT(visca_camera,       "VSC_", AP_Visca_Camera),
+    GOBJECT(visca_camera,       "VSC", AP_Visca_Camera),
 #endif
 
     // @Group: LOG
