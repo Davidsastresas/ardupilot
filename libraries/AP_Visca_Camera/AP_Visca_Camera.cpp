@@ -57,15 +57,12 @@ void AP_Visca_Camera::direct_control()
     if (rc_in < 1300) {
         cmd_set_zoomup cmd;
         send_command((uint8_t *)&cmd, sizeof(cmd_set_zoomup)); 
-         gcs().send_text(MAV_SEVERITY_INFO, "zoomup");
     } else if (rc_in > 1800){
         cmd_set_zoomdown cmd;
         send_command((uint8_t *)&cmd, sizeof(cmd_set_zoomdown)); 
-        gcs().send_text(MAV_SEVERITY_INFO, "zoomdown");
     } else {
         cmd_set_zoomstop cmd;
         send_command((uint8_t *)&cmd, sizeof(cmd_set_zoomstop)); 
-        gcs().send_text(MAV_SEVERITY_INFO, "zoomstop");
     };
 }
 
