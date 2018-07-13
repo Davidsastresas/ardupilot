@@ -13,7 +13,14 @@ AP_Compass_SITL::AP_Compass_SITL(Compass &compass):
     if (_sitl != nullptr) {
         _compass._setup_earth_field();
         for (uint8_t i=0; i<SITL_NUM_COMPASSES; i++) {
+            // default offsets to correct value
+            compass.set_offsets(i, _sitl->mag_ofs);
+            
             _compass_instance[i] = register_compass();
+            set_dev_id(_compass_instance[i], AP_HAL::Device::make_bus_id(AP_HAL::Device::BUS_TYPE_SITL, i, 0, DEVTYPE_SITL));
+
+            // save so the compass always comes up configured in SITL
+            save_dev_id(_compass_instance[i]);
         }
         hal.scheduler->register_timer_process(FUNCTOR_BIND(this, &AP_Compass_SITL::_timer, void));
     }

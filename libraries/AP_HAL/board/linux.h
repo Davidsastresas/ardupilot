@@ -382,3 +382,16 @@
 #ifndef HAL_BOARD_CAN_IFACE_NAME
 #define HAL_BOARD_CAN_IFACE_NAME "can0"
 #endif
+
+// if bus masks are not setup above then use these defaults
+#ifndef HAL_LINUX_I2C_BUS_MASK
+#define HAL_LINUX_I2C_BUS_MASK 0xFFFF
+#endif
+
+#ifndef HAL_LINUX_I2C_INTERNAL_BUS_MASK
+#define HAL_LINUX_I2C_INTERNAL_BUS_MASK 0xFFFF
+#endif
+
+#ifndef HAL_LINUX_I2C_EXTERNAL_BUS_MASK
+#define HAL_LINUX_I2C_EXTERNAL_BUS_MASK 0xFFFF
+#endif

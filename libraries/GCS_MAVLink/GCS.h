@@ -284,6 +284,9 @@ protected:
 
     virtual void handle_command_ack(const mavlink_message_t* msg);
     void handle_set_mode(mavlink_message_t* msg);
+    void handle_command_int(mavlink_message_t* msg);
+    virtual MAV_RESULT handle_command_int_packet(const mavlink_command_int_t &packet);
+
     void handle_mission_request_list(AP_Mission &mission, mavlink_message_t *msg);
     void handle_mission_request(AP_Mission &mission, mavlink_message_t *msg);
     void handle_mission_clear_all(AP_Mission &mission, mavlink_message_t *msg);
@@ -351,11 +354,13 @@ protected:
     virtual MAV_RESULT _handle_command_preflight_calibration(const mavlink_command_long_t &packet);
     virtual MAV_RESULT _handle_command_preflight_calibration_baro();
 
+    void handle_command_long(mavlink_message_t* msg);
+    MAV_RESULT handle_command_accelcal_vehicle_pos(const mavlink_command_long_t &packet);
     MAV_RESULT handle_command_mag_cal(const mavlink_command_long_t &packet);
-    MAV_RESULT handle_command_long_message(mavlink_command_long_t &packet);
+    virtual MAV_RESULT handle_command_long_packet(const mavlink_command_long_t &packet);
     MAV_RESULT handle_command_camera(const mavlink_command_long_t &packet);
     MAV_RESULT handle_command_do_send_banner(const mavlink_command_long_t &packet);
-    MAV_RESULT handle_command_do_gripper(mavlink_command_long_t &packet);
+    MAV_RESULT handle_command_do_gripper(const mavlink_command_long_t &packet);
     MAV_RESULT handle_command_do_set_mode(const mavlink_command_long_t &packet);
     MAV_RESULT handle_command_get_home_position(const mavlink_command_long_t &packet);
 
@@ -389,7 +394,7 @@ private:
 
     virtual void        handleMessage(mavlink_message_t * msg) = 0;
 
-    MAV_RESULT handle_servorelay_message(mavlink_command_long_t &packet);
+    MAV_RESULT handle_servorelay_message(const mavlink_command_long_t &packet);
 
     bool calibrate_gyros();
 

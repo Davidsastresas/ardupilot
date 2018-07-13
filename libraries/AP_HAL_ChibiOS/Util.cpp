@@ -202,7 +202,7 @@ bool Util::flash_bootloader()
     uint32_t fw_size;
     const char *fw_name = "bootloader.bin";
 
-    const uint8_t *fw = AP_ROMFS::find_file(fw_name, fw_size);
+    uint8_t *fw = AP_ROMFS::find_decompress(fw_name, fw_size);
     if (!fw) {
         hal.console->printf("failed to find %s\n", fw_name);
         return false;
@@ -211,12 +211,14 @@ bool Util::flash_bootloader()
     const uint32_t addr = stm32_flash_getpageaddr(0);
     if (!memcmp(fw, (const void*)addr, fw_size)) {
         hal.console->printf("Bootloader up-to-date\n");
+        free(fw);
         return true;
     }
 
     hal.console->printf("Erasing\n");
     if (!stm32_flash_erasepage(0)) {
         hal.console->printf("Erase failed\n");
+        free(fw);
         return false;
     }
     hal.console->printf("Flashing %s @%08x\n", fw_name, (unsigned int)addr);
@@ -233,10 +235,12 @@ bool Util::flash_bootloader()
             continue;
         }
         hal.console->printf("Flash OK\n");
+        free(fw);
         return true;
     }
 
     hal.console->printf("Flash failed after %u attempts\n", max_attempts);
+    free(fw);
     return false;
 }
 
@@ -252,12 +256,12 @@ bool Util::get_system_id(char buf[40])
     strncpy(board_name, CHIBIOS_SHORT_BOARD_NAME, 13);
     board_name[13] = 0;
     
-    // this format is chosen to match the human_readable_serial()
-    // function in auth.c
+    // this format is chosen to match the format used by HAL_PX4
     snprintf(buf, 40, "%s %02X%02X%02X%02X %02X%02X%02X%02X %02X%02X%02X%02X",
              board_name,
-             (unsigned)serialid[0], (unsigned)serialid[1], (unsigned)serialid[2], (unsigned)serialid[3], 
-             (unsigned)serialid[4], (unsigned)serialid[5], (unsigned)serialid[6], (unsigned)serialid[7], 
-             (unsigned)serialid[8], (unsigned)serialid[9], (unsigned)serialid[10],(unsigned)serialid[11]); 
+             (unsigned)serialid[3], (unsigned)serialid[2], (unsigned)serialid[1], (unsigned)serialid[0], 
+             (unsigned)serialid[7], (unsigned)serialid[6], (unsigned)serialid[5], (unsigned)serialid[4], 
+             (unsigned)serialid[11], (unsigned)serialid[10], (unsigned)serialid[9],(unsigned)serialid[8]);
+    buf[39] = 0;
     return true;
 }

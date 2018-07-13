@@ -498,6 +498,7 @@ is bob we will attempt to checkout bob-AVR'''
                 "pxf",
                 "pxfmini",
                 "KakuteF4",
+                "KakuteF7",
                 "MatekF405",
                 "MatekF405-Wing",
                 "OMNIBUSF7V2",
@@ -506,7 +507,12 @@ is bob we will attempt to checkout bob-AVR'''
                 "mini-pix",
                 "airbotf4",
                 "revo-mini",
-                "CubeBlack"]
+                "CubeBlack",
+                "Pixhawk4",
+                "PH4-mini",
+                "CUAVv5",
+                "mRoX21",
+                "Pixracer"]
 
     def build_arducopter(self, tag):
         '''build Copter binaries'''

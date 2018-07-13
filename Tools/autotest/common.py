@@ -110,12 +110,14 @@ class AutoTest(ABC):
         self.viewerip = viewerip
         self.use_map = use_map
 
-    def progress(self, text):
+    @staticmethod
+    def progress(text):
         """Display autotest progress text."""
         print("AUTOTEST: " + text)
 
     # following two functions swiped from autotest.py:
-    def buildlogs_dirpath(self):
+    @staticmethod
+    def buildlogs_dirpath():
         return os.getenv("BUILDLOGS", util.reltopdir("../buildlogs"))
 
     def buildlogs_path(self, path):
@@ -189,7 +191,7 @@ class AutoTest(ABC):
                                     timeout=1)
             if m is not None:
                 print("Received (%s)" % str(m))
-                break;
+                break
         self.mavproxy.send("set streamrate %u\n" % self.sitl_streamrate())
         self.progress("Reboot complete")
 
@@ -299,7 +301,8 @@ class AutoTest(ABC):
             self.mavproxy.send('map set showgpspos 0\n')
             self.mavproxy.send('map set showsimpos 0\n')
 
-    def mission_count(self, filename):
+    @staticmethod
+    def mission_count(filename):
         """Load a mission from a file and return number of waypoints."""
         wploader = mavwp.MAVWPLoader()
         wploader.load(filename)
@@ -346,7 +349,7 @@ class AutoTest(ABC):
 
     def armed(self):
         '''Return true if vehicle is armed and safetyoff'''
-        return self.mav.motors_armed();
+        return self.mav.motors_armed()
 
     def arm_vehicle(self):
         """Arm vehicle with mavlink arm message."""
@@ -365,7 +368,8 @@ class AutoTest(ABC):
     def set_parameter(self, name, value):
         for i in range(1, 10):
             self.mavproxy.send("param set %s %s\n" % (name, str(value)))
-            if self.get_parameter(name) == float(value):
+            returned_value = self.get_parameter(name)
+            if returned_value == float(value):
                 # yes, exactly equal.
                 break
             self.progress("Param fetch returned incorrect value (%s) vs (%s)"
