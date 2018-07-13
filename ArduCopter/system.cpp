@@ -249,6 +249,12 @@ void Copter::init_ardupilot()
 #if MODE_AUTO_ENABLED == ENABLED
     DataFlash.set_mission(&mission);
 #endif
+
+#if VISCA == ENABLED
+    // initialise camera mount
+    visca_camera.init(serial_manager);
+#endif
+    
     DataFlash.setVehicle_Startup_Log_Writer(FUNCTOR_BIND(&copter, &Copter::Log_Write_Vehicle_Startup_Messages, void));
 
     // initialise the flight mode and aux switch
