@@ -51,6 +51,9 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
 #if ADVANCED_FAILSAFE == ENABLED
     SCHED_TASK(afs_fs_check,           10,    100),
 #endif
+#if PRECISION_LANDING == ENABLED
+    SCHED_TASK(update_precland,      400,     50),
+#endif
     SCHED_TASK_CLASS(GCS,            (GCS*)&plane._gcs,       update_receive,   300,  500),
     SCHED_TASK_CLASS(GCS,            (GCS*)&plane._gcs,       update_send,      300,  500),
     SCHED_TASK_CLASS(AP_ServoRelayEvents, &plane.ServoRelayEvents, update_events,          50,  150),
@@ -106,6 +109,7 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
 #if LANDING_GEAR_ENABLED == ENABLED
     SCHED_TASK(landing_gear_update, 5, 50),
 #endif
+   // SCHED_TASK(ten_hz_debug_loop,       1,     75),
 };
 
 constexpr int8_t Plane::_failsafe_priorities[7];
@@ -688,8 +692,39 @@ void Plane::publish_osd_info()
     nav_info.wp_bearing = nav_controller->target_bearing_cd();
     nav_info.wp_xtrack_error = nav_controller->crosstrack_error();
     nav_info.wp_number = mission.get_current_nav_index();
+
     osd.set_nav_info(nav_info);
 }
 #endif
+
+#if PRECISION_LANDING == ENABLED
+
+void Plane::init_precland()
+{
+    plane.precland.init(400);
+}
+
+void Plane::update_precland()
+{
+    int32_t height_above_ground_cm = current_loc.alt;
+
+    // use range finder altitude if it is valid, else try to get terrain alt
+    if (rangefinder_alt_ok()) {
+        height_above_ground_cm = rangefinder_state.height_estimate;
+    } else if (g.terrain_follow) {
+        if (!current_loc.get_alt_cm(Location::AltFrame::ABOVE_TERRAIN, height_above_ground_cm)) {
+            height_above_ground_cm = current_loc.alt;
+        }
+    }
+
+    precland.update(height_above_ground_cm, rangefinder_alt_ok());
+}
+#endif
+
+void Plane::ten_hz_debug_loop()
+{
+    precland.send_land_debug();
+}
+
 
 AP_HAL_MAIN_CALLBACKS(&plane);

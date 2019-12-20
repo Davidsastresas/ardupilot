@@ -43,7 +43,7 @@ const AP_Param::GroupInfo AC_PrecLand::var_info[] = {
     // @Increment: 1
     // @User: Advanced
     // @Units: cm
-    AP_GROUPINFO("LAND_OFS_X",    3, AC_PrecLand, _land_ofs_cm_x, 0),
+    AP_GROUPINFO("LND_OFS_X_B",    3, AC_PrecLand, _B_land_ofs_cm_x, 0),
 
     // @Param: LAND_OFS_Y
     // @DisplayName: Land offset right
@@ -52,7 +52,7 @@ const AP_Param::GroupInfo AC_PrecLand::var_info[] = {
     // @Increment: 1
     // @User: Advanced
     // @Units: cm
-    AP_GROUPINFO("LAND_OFS_Y",    4, AC_PrecLand, _land_ofs_cm_y, 0),
+    AP_GROUPINFO("LND_OFS_Y_B",    4, AC_PrecLand, _B_land_ofs_cm_y, 0),
 
     // @Param: EST_TYPE
     // @DisplayName: Precision Land Estimator Type
@@ -103,6 +103,34 @@ const AP_Param::GroupInfo AC_PrecLand::var_info[] = {
     // @User: Advanced
     // @RebootRequired: True
     AP_GROUPINFO("LAG", 9, AC_PrecLand, _lag, 0.02f), // 20ms is the old default buffer size (8 frames @ 400hz/2.5ms)
+
+    // @Param: LAND_OFS_X
+    // @DisplayName: Land offset forward
+    // @Description: Desired landing position of the camera forward of the target in vehicle body frame
+    // @Range: -20 20
+    // @Increment: 1
+    // @User: Advanced
+    // @Units: cm
+    AP_GROUPINFO("LND_OFS_X_S",    10, AC_PrecLand, _S_land_ofs_cm_x, 0),
+
+    // @Param: LAND_OFS_Y
+    // @DisplayName: Land offset right
+    // @Description: desired landing position of the camera right of the target in vehicle body frame
+    // @Range: -20 20
+    // @Increment: 1
+    // @User: Advanced
+    // @Units: cm
+    AP_GROUPINFO("LND_OFS_Y_S",    11, AC_PrecLand, _S_land_ofs_cm_y, 0),
+
+    // @Param: LAND_OFS_Y
+    // @DisplayName: Land offset right
+    // @Description: desired landing position of the camera right of the target in vehicle body frame
+    // @Range: -20 20
+    // @Increment: 1
+    // @User: Advanced
+    // @Units: cm
+    AP_GROUPINFO("ID_BG_MRKR",    12, AC_PrecLand, _B_marker_id, 11),
+
 
     AP_GROUPEND
 };
@@ -444,7 +472,27 @@ void AC_PrecLand::run_output_prediction()
     _target_vel_rel_out_NE.y -= vel_ned_rel_imu.y;
 
     // Apply land offset
-    Vector3f land_ofs_ned_m = _ahrs.get_rotation_body_to_ned() * Vector3f(_land_ofs_cm_x,_land_ofs_cm_y,0) * 0.01f;
-    _target_pos_rel_out_NE.x += land_ofs_ned_m.x;
-    _target_pos_rel_out_NE.y += land_ofs_ned_m.y;
+    uint16_t marker_id;
+    if ( _backend->get_marker_id(marker_id) ) {
+        if ( marker_id == _B_marker_id ) {
+            Vector3f land_ofs_ned_m = _ahrs.get_rotation_body_to_ned() * Vector3f(_B_land_ofs_cm_x,_B_land_ofs_cm_y,0) * 0.01f;
+            _target_pos_rel_out_NE.x += land_ofs_ned_m.x;
+            _target_pos_rel_out_NE.y += land_ofs_ned_m.y;
+        } else {
+            Vector3f land_ofs_ned_m = _ahrs.get_rotation_body_to_ned() * Vector3f(_S_land_ofs_cm_x,_S_land_ofs_cm_y,0) * 0.01f;
+            _target_pos_rel_out_NE.x += land_ofs_ned_m.x;
+            _target_pos_rel_out_NE.y += land_ofs_ned_m.y;
+        }
+    } else {
+        Vector3f land_ofs_ned_m = _ahrs.get_rotation_body_to_ned() * Vector3f(_B_land_ofs_cm_x,_B_land_ofs_cm_y,0) * 0.01f;
+        _target_pos_rel_out_NE.x += land_ofs_ned_m.x;
+        _target_pos_rel_out_NE.y += land_ofs_ned_m.y;
+    }
+}
+
+// DEBUG
+void AC_PrecLand::send_land_debug()
+{
+    gcs().send_text(MAV_SEVERITY_INFO, "pos x:%.2f  pos y:%.2f", 
+    (double)_target_pos_rel_out_NE.x, (double)_target_pos_rel_out_NE.y); 
 }

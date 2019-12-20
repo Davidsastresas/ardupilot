@@ -88,6 +88,9 @@ public:
     // process a LANDING_TARGET mavlink message
     void handle_msg(const mavlink_message_t &msg);
 
+    // DEBUG
+    void send_land_debug();
+
     // parameter var table
     static const struct AP_Param::GroupInfo var_info[];
 
@@ -120,8 +123,11 @@ private:
     AP_Int8                     _estimator_type;    // precision landing estimator type
     AP_Float                    _lag;               // sensor lag in seconds
     AP_Float                    _yaw_align;         // Yaw angle from body x-axis to sensor x-axis.
-    AP_Float                    _land_ofs_cm_x;     // Desired landing position of the camera forward of the target in vehicle body frame
-    AP_Float                    _land_ofs_cm_y;     // Desired landing position of the camera right of the target in vehicle body frame
+    AP_Float                    _B_land_ofs_cm_x;     // Desired landing position of the camera forward of the target in vehicle body frame
+    AP_Float                    _B_land_ofs_cm_y;     // Desired landing position of the camera right of the target in vehicle body frame
+    AP_Float                    _S_land_ofs_cm_x;     // Desired landing position of the camera forward of the target in vehicle body frame
+    AP_Float                    _S_land_ofs_cm_y;     // Desired landing position of the camera right of the target in vehicle body frame
+    AP_Int8                     _B_marker_id;
     AP_Float                    _accel_noise;       // accelerometer process noise
     AP_Vector3f                 _cam_offset;        // Position of the camera relative to the CG
 

@@ -1079,6 +1079,8 @@ void QuadPlane::init_loiter(void)
     // remember initial pitch
     loiter_initial_pitch_cd = MAX(plane.ahrs.pitch_sensor, 0);
 
+    land_repo_active = false;
+
     // prevent re-init of target position
     last_loiter_ms = AP_HAL::millis();
 }
@@ -1090,6 +1092,7 @@ void QuadPlane::init_qland(void)
     poscontrol.state = QPOS_LAND_DESCEND;
     landing_detect.lower_limit_start_ms = 0;
     landing_detect.land_start_ms = 0;
+    land_repo_active = false;
 }
 
 
@@ -1195,6 +1198,13 @@ void QuadPlane::control_loiter()
         loiter_nav->soften_for_landing();
     }
 
+    int16_t roll_input = plane.channel_roll->get_control_in();
+    int16_t pitch_input = plane.channel_pitch->get_control_in();
+
+    //if(!roll_input || !pitch_input) {
+      //  land_repo_active = true;
+    //}
+
     const uint32_t now = AP_HAL::millis();
     if (now - last_loiter_ms > 500) {
         loiter_nav->clear_pilot_desired_acceleration();
@@ -1209,9 +1219,28 @@ void QuadPlane::control_loiter()
     pos_control->set_max_speed_z(-pilot_velocity_z_max, pilot_velocity_z_max);
     pos_control->set_max_accel_z(pilot_accel_z);
 
+#if PRECISION_LANDING == ENABLED
+    bool doing_precision_landing = true; 
+    // !land_repo_active && plane.precland.target_acquired();
+    // run precision landing
+    if (doing_precision_landing) {
+        Vector2f target_pos, target_vel_rel;
+        if (!plane.precland.get_target_position_cm(target_pos)) {
+            target_pos.x = inertial_nav.get_position().x;
+            target_pos.y = inertial_nav.get_position().y;
+        }
+        if (!plane.precland.get_target_velocity_relative_cms(target_vel_rel)) {
+            target_vel_rel.x = -inertial_nav.get_velocity().x;
+            target_vel_rel.y = -inertial_nav.get_velocity().y;
+        }
+        pos_control->set_xy_target(target_pos.x, target_pos.y);
+        pos_control->override_vehicle_velocity_xy(-target_vel_rel);
+    }
+#endif
+
     // process pilot's roll and pitch input
-    loiter_nav->set_pilot_desired_acceleration(plane.channel_roll->get_control_in(),
-                                               plane.channel_pitch->get_control_in(),
+    loiter_nav->set_pilot_desired_acceleration(roll_input,
+                                               pitch_input,
                                                plane.G_Dt);
 
     // run loiter controller

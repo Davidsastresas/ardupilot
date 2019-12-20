@@ -344,6 +344,9 @@ public:
 
         k_param_logger = 253, // Logging Group
 
+        // 254: precision landing object
+        k_param_precland = 254,
+
         // 254,255: reserved
     };
 

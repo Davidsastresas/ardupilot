@@ -368,6 +368,9 @@ private:
         TRANSITION_DONE
     } transition_state;
 
+    // true when land repositioning from pilot is active
+    bool land_repo_active:1;    
+
     // true when waiting for pilot throttle
     bool throttle_wait:1;
 
