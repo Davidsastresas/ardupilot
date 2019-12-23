@@ -34,6 +34,9 @@ public:
     // returns distance to target in meters (0 means distance is not known)
     virtual float distance_to_target() { return 0.0f; };
 
+    // returns true if using companion and there is marker id feedback
+    virtual bool get_marker_id(uint16_t& ret) { return false; };
+
     // parses a mavlink message from the companion computer
     virtual void handle_msg(const mavlink_message_t &msg) {};
 
