@@ -50,6 +50,7 @@ void AC_PrecLand_Companion::handle_msg(const mavlink_message_t &msg)
 
     _timestamp_us = packet.time_usec;
     _distance_to_target = packet.distance;
+    _marker_id = packet.target_num;
 
     // compute unit vector towards target
     _los_meas_body = Vector3f(-tanf(packet.angle_y), tanf(packet.angle_x), 1.0f);
