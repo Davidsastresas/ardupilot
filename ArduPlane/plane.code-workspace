@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "/home/sas/AP/Plane"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"AntennaTracker": true,
+			"APMrover2": true
+		},
+		"workbench.editor.closeEmptyGroups": false,
+		"workbench.editor.openPositioning": "left",
+		"zenMode.hideTabs": false
+	}
+}
