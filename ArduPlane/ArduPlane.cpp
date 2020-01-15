@@ -202,7 +202,7 @@ void Plane::update_compass(void)
 }
 
 /*
-  do 10Hz logging
+  do 25Hz logging
  */
 void Plane::update_logging1(void)
 {
@@ -218,7 +218,7 @@ void Plane::update_logging1(void)
 }
 
 /*
-  do 10Hz logging - part2
+  do 25Hz logging - part2
  */
 void Plane::update_logging2(void)
 {
@@ -233,6 +233,11 @@ void Plane::update_logging2(void)
 
     if (should_log(MASK_LOG_IMU))
         logger.Write_Vibration();
+
+#if PRECISION_LANDING == ENABLED
+    // log output
+    Log_Write_Precland();
+#endif
 }
 
 
