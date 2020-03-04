@@ -441,6 +441,10 @@ bool GCS_MAVLINK_Plane::try_send_message(enum ap_message id)
     case MSG_LANDING:
         plane.landing.send_landing_message(chan);
         break;
+    case MSG_ARYS_ACC:
+        CHECK_PAYLOAD_SIZE(ARYS_ACC);
+        plane.send_arys_acc(chan);
+        break;
     default:
         return GCS_MAVLINK::try_send_message(id);
     }
@@ -590,7 +594,8 @@ static const ap_message STREAM_EXTRA1_msgs[] = {
     MSG_ESC_TELEMETRY,
 };
 static const ap_message STREAM_EXTRA2_msgs[] = {
-    MSG_VFR_HUD
+    MSG_VFR_HUD,
+    MSG_ARYS_ACC,
 };
 static const ap_message STREAM_EXTRA3_msgs[] = {
     MSG_AHRS,

@@ -83,3 +83,30 @@ void Plane::rpm_update(void)
         }
     }
 }
+
+void Plane::derivate_speeds(void)
+{
+    uint32_t tnow = AP_HAL::micros();
+    float dt = tnow - _Arys_der_speeds.last_time_micros;
+
+    // smooth a bit airspd acc, it oscilates too much as the noise is high
+    float airspd = ( airspeed.get_airspeed() * 0.4 ) + ( _Arys_der_speeds.last_arspd * 0.6 );
+    float groundspd = ahrs.groundspeed();
+
+    // compute accelerations, on m/s/s
+    _Arys_der_speeds.arspd_acc = ( airspd - _Arys_der_speeds.last_arspd ) / dt * 1000000;
+    _Arys_der_speeds.grspd_acc = ( groundspd - _Arys_der_speeds.last_grspd ) / dt * 1000000;
+
+    _Arys_der_speeds.last_arspd = airspd;
+    _Arys_der_speeds.last_grspd = groundspd;
+    
+    _Arys_der_speeds.last_time_micros = tnow;
+}
+
+void Plane::send_arys_acc(mavlink_channel_t chan)
+{
+    mavlink_msg_arys_acc_send(
+        chan,
+        _Arys_der_speeds.grspd_acc,
+        _Arys_der_speeds.arspd_acc);
+}

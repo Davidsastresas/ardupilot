@@ -775,6 +775,16 @@ private:
 
     static const struct LogStructure log_structure[];
 
+    struct Arys_der_speeds {
+        uint32_t last_time_micros;
+        float    last_arspd;
+        float    last_grspd;
+        float    arspd_acc;
+        float    grspd_acc;
+    };
+
+    Arys_der_speeds _Arys_der_speeds;
+
     // rudder mixing gain for differential thrust (0 - 1)
     float rudder_dt;
 
@@ -1026,6 +1036,9 @@ private:
     bool allow_reverse_thrust(void) const;
     bool have_reverse_thrust(void) const;
     int16_t get_throttle_input(bool no_deadzone=false) const;
+
+    void derivate_speeds(void);
+    void send_arys_acc(mavlink_channel_t chan);
 
     // support for AP_Avoidance custom flight mode, AVOID_ADSB
     bool avoid_adsb_init(bool ignore_checks);
