@@ -546,6 +546,10 @@ public:
     AP_Gripper gripper;
 #endif
 
+#if WHEELBRAKE_ENABLED == ENABLED
+    AP_WheelBrake wheelbrake;
+#endif
+
     AP_Int32 flight_options;
 
 #ifdef ENABLE_SCRIPTING

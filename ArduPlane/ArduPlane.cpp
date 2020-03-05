@@ -107,6 +107,9 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
     SCHED_TASK(landing_gear_update, 5, 50),
 #endif
     SCHED_TASK(derivate_speeds, 10, 100),
+#if WHEELBRAKE_ENABLED == ENABLED
+    SCHED_TASK_CLASS(AP_WheelBrake, &plane.g2.wheelbrake, update, 10, 75),
+#endif
 };
 
 constexpr int8_t Plane::_failsafe_priorities[7];

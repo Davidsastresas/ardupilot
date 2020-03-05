@@ -181,6 +181,10 @@ void Plane::init_ardupilot()
     g2.gripper.init();
 #endif
 
+#if WHEELBRAKE_ENABLED == ENABLED
+    g2.wheelbrake.init();
+#endif
+
     // disable safety if requested
     BoardConfig.init_safety();
 

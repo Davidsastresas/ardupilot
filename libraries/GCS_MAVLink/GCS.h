@@ -415,6 +415,8 @@ protected:
     MAV_RESULT handle_command_get_home_position(const mavlink_command_long_t &packet);
     MAV_RESULT handle_command_do_fence_enable(const mavlink_command_long_t &packet);
 
+    MAV_RESULT handle_command_wheel_brake(const mavlink_command_long_t &packet);
+    
     void handle_optical_flow(const mavlink_message_t &msg);
 
     MAV_RESULT handle_fixed_mag_cal_yaw(const mavlink_command_long_t &packet);

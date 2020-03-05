@@ -38,6 +38,7 @@
 #include <AP_VisualOdom/AP_VisualOdom.h>
 #include <AP_OpticalFlow/OpticalFlow.h>
 #include <AP_Baro/AP_Baro.h>
+#include <AP_WheelBrake/AP_WheelBrake.h>
 
 #include <stdio.h>
 
@@ -3552,6 +3553,34 @@ MAV_RESULT GCS_MAVLINK::handle_command_do_gripper(const mavlink_command_long_t &
     return result;
 }
 
+MAV_RESULT GCS_MAVLINK::handle_command_wheel_brake(const mavlink_command_long_t &packet)
+{
+    AP_WheelBrake *wheelbrake = AP::wheelbrake();
+    if ( wheelbrake == nullptr ) {
+        return MAV_RESULT_FAILED;
+    }
+
+    if ( !wheelbrake->enabled() ) {
+        return MAV_RESULT_FAILED;
+    }
+
+    MAV_RESULT result = MAV_RESULT_ACCEPTED;
+
+    switch ( (uint8_t)packet.param1 ) {
+        case 1:
+            wheelbrake->brake();
+            break;
+        case 0:
+            wheelbrake->release();
+            break;
+        default:
+            result = MAV_RESULT_FAILED;
+            break;
+    }
+
+    return result;
+}
+
 MAV_RESULT GCS_MAVLINK::handle_command_accelcal_vehicle_pos(const mavlink_command_long_t &packet)
 {
     if (!AP::ins().get_acal()->gcs_vehicle_position(packet.param1)) {
@@ -3644,6 +3673,10 @@ MAV_RESULT GCS_MAVLINK::handle_command_long_packet(const mavlink_command_long_t 
 
     case MAV_CMD_DO_GRIPPER:
         result = handle_command_do_gripper(packet);
+        break;
+    
+    case MAV_CMD_WHEEL_BRAKE:
+        result = handle_command_wheel_brake(packet);
         break;
 
     case MAV_CMD_DO_MOUNT_CONFIGURE:

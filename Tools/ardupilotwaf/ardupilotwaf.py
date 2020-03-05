@@ -77,6 +77,7 @@ COMMON_VEHICLE_DEPENDENT_LIBRARIES = [
     'AP_ROMFS',
     'AP_Proximity',
     'AP_Gripper',
+    'AP_WheelBrake',
     'AP_RTC',
     'AC_Sprayer',
     'AC_Fence',

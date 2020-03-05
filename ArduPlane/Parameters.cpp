@@ -1239,6 +1239,12 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("DSPOILER_AILMTCH", 21, ParametersG2, crow_flap_aileron_matching, 100),
 
+    #if WHEELBRAKE_ENABLED == ENABLED
+    // @Group: WBRK
+    // @Path: ../libraries/AP_WheelBrake/AP_WheelBrake.cpp
+    AP_SUBGROUPINFO(wheelbrake, "WBRK_", 22, ParametersG2, AP_WheelBrake),
+    #endif
+
     AP_GROUPEND
 };
 
