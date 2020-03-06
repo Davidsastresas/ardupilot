@@ -786,6 +786,8 @@ private:
 
     Arys_der_speeds _Arys_der_speeds;
 
+    uint8_t _gcs_flap_state = 3;
+
     // rudder mixing gain for differential thrust (0 - 1)
     float rudder_dt;
 

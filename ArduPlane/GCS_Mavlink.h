@@ -63,4 +63,5 @@ private:
     int16_t vfr_hud_throttle() const override;
     float vfr_hud_climbrate() const override;
 
+    MAV_RESULT handle_command_flap_action(const mavlink_command_long_t &packet);
 };
