@@ -1076,6 +1076,7 @@ private:
     void init_precland();
     void update_precland();
 #endif
+    void precland_nextwp_update();
 
     bool reversed_throttle;
     bool have_reverse_throttle_rc_option;

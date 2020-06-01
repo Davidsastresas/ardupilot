@@ -109,6 +109,7 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
 #if LANDING_GEAR_ENABLED == ENABLED
     SCHED_TASK(landing_gear_update, 5, 50),
 #endif
+    SCHED_TASK(precland_nextwp_update,        10,    100),
 };
 
 constexpr int8_t Plane::_failsafe_priorities[7];
@@ -722,5 +723,22 @@ void Plane::update_precland()
     precland.update(height_above_ground_cm, rangefinder_alt_ok());
 }
 #endif
+
+void Plane::precland_nextwp_update() {
+    if (!quadplane.in_vtol_auto()) {
+        return;
+    }
+
+    if (!quadplane.is_vtol_land(mission.get_current_nav_cmd().id)) {
+        return;
+    }
+
+    if (!plane.precland.target_acquired()) {
+        return;
+    }
+
+    plane.next_WP_loc.lat = plane.current_loc.lat;
+    plane.next_WP_loc.lng = plane.current_loc.lng;
+}
 
 AP_HAL_MAIN_CALLBACKS(&plane);
