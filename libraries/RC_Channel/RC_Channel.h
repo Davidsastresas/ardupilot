@@ -192,6 +192,7 @@ public:
         ARSPD_CALIBRATE=      91, // calibrate airspeed ratio 
         FBWA =                92, // Fly-By-Wire-A
         PROXIMITY_AUTO_YAW =  93, // enable or disable automatic yawing to face closest obstacle
+        PROX_DIST_HOLD  =     94, // enable / disable proximity distance hold
 
         // entries from 100 onwards are expected to be developer
         // options used for testing
