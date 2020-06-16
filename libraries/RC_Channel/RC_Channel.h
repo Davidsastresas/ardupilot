@@ -190,6 +190,7 @@ public:
         EKF_POS_SOURCE =      90, // change EKF position source between primary, secondary and tertiary sources
         ARSPD_CALIBRATE=      91, // calibrate airspeed ratio 
         PROXIMITY_AUTO_YAW =  92, // enable or disable automatic yawing to face closest obstacle
+        PROX_DIST_HOLD  =     93, // enable / disable proximity distance hold
 
         // entries from 100 onwards are expected to be developer
         // options used for testing
