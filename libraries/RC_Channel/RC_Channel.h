@@ -188,6 +188,7 @@ public:
         SOARING =             88, // three-position switch to set soaring mode
         LANDING_FLARE =       89, // force flare, throttle forced idle, pitch to LAND_PITCH_CD, tilts up
         PROXIMITY_AUTO_YAW =  90, // enable or disable automatic yawing to face closest obstacle
+        PROX_DIST_HOLD  =     91, // enable / disable proximity distance hold
 
         // entries from 100 onwards are expected to be developer
         // options used for testing
