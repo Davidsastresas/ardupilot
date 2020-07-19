@@ -189,6 +189,7 @@ public:
         LANDING_FLARE =       89, // force flare, throttle forced idle, pitch to LAND_PITCH_CD, tilts up
         EKF_POS_SOURCE =      90, // change EKF position source between primary, secondary and tertiary sources
         ARSPD_CALIBRATE=      91, // calibrate airspeed ratio 
+        PROXIMITY_AUTO_YAW =  92, // enable or disable automatic yawing to face closest obstacle
 
         // entries from 100 onwards are expected to be developer
         // options used for testing
