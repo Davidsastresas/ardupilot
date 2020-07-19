@@ -192,6 +192,7 @@ public:
         ARSPD_CALIBRATE=      91, // calibrate airspeed ratio 
         FBWA =                92, // Fly-By-Wire-A
         RELOCATE_MISSION =    93, // used in separate branch MISSION_RELATIVE
+        PROXIMITY_AUTO_YAW =  94, // enable or disable automatic yawing to face closest obstacle
 
         // entries from 100 onwards are expected to be developer
         // options used for testing

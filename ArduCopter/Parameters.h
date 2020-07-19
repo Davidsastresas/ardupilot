@@ -642,6 +642,10 @@ public:
     AP_Int32 rtl_options;
 #endif
 
+#if PROXIMITY_ENABLED == ENABLED
+    AP_Float auto_yaw_min_dist;
+#endif
+
 };
 
 extern const AP_Param::Info        var_info[];
