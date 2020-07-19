@@ -992,6 +992,14 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Bitmask: 0:Allow Arming from Transmitter,2:Ignore pilot yaw
     // @User: Advanced
     AP_GROUPINFO("GUID_OPTIONS", 41, ParametersG2, guided_options, 0),
+#if PROXIMITY_ENABLED == ENABLED
+    // @Param: AUTOYAW_MIN_DIST
+    // @DisplayName: Proximity auto yaw distance
+    // @Description: If a object is closer than this distace the vehicle will yaw to face it, 0 is disable
+    // @Units: m
+    // @Range: 2 5
+    // @User: Standard
+    AP_GROUPINFO("AUTOYAW_MIN_DIST", 42, ParametersG2, auto_yaw_min_dist, 0),
 #endif
 
     // @Param: FS_GCS_TIMEOUT
