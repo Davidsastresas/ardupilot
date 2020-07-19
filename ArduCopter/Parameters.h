@@ -644,6 +644,10 @@ public:
 #endif
 
     AP_Int32 flight_options;
+    
+#if PROXIMITY_ENABLED == ENABLED
+    AP_Float auto_yaw_min_dist;
+#endif
 
 };
 
