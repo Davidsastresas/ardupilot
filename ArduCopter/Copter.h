@@ -630,7 +630,7 @@ private:
 
 #if PROXIMITY_ENABLED == ENABLED
     // true is proximity based auto yawing is enabled
-    bool auto_yaw_enabled = true;
+    bool auto_yaw_enabled = false;
 #endif
 
     // AP_State.cpp
