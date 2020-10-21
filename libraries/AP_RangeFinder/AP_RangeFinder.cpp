@@ -289,6 +289,9 @@ void RangeFinder::init(enum Rotation orientation_default)
         state[i].status = Status::NotConnected;
         state[i].range_valid_count = 0;
     }
+    if (num_instances < 5 ) {
+        gcs().send_text(MAV_SEVERITY_WARNING, "Some lidars were not initialized, only %d detected", num_instances);
+    }
 }
 
 /*
@@ -320,6 +323,27 @@ bool RangeFinder::_add_backend(AP_RangeFinder_Backend *backend)
     }
     if (num_instances == RANGEFINDER_MAX_INSTANCES) {
         AP_HAL::panic("Too many RANGERS backends");
+    }
+
+    switch( backend->orientation() ) {
+        case ROTATION_NONE:
+            gcs().send_text(MAV_SEVERITY_INFO, "Initialized front lidar");
+            break;
+        case ROTATION_YAW_45:
+            gcs().send_text(MAV_SEVERITY_INFO, "Initialized right lidar");
+            break;
+        case ROTATION_YAW_315:
+            gcs().send_text(MAV_SEVERITY_INFO, "Initialized left lidar");
+            break;
+        case ROTATION_PITCH_90:
+            gcs().send_text(MAV_SEVERITY_INFO, "Initialized up lidar");
+            break;
+        case ROTATION_PITCH_270:
+            gcs().send_text(MAV_SEVERITY_INFO, "Initialized down lidar");
+            break;
+        default:
+            gcs().send_text(MAV_SEVERITY_INFO, "Initialized unknown orientation lidar");
+            break;
     }
 
     drivers[num_instances++] = backend;
