@@ -112,10 +112,31 @@ void AP_Proximity_RangeFinder::update_closest_object()
     // adjacent sectors will always be larger than closest
     // as adjacent distance approaches closest offset approaches 45/2 (half way between the two)
     // a similar reading in both adjacent sectors will cancel out
+    uint8_t next_sector;
+    uint8_t prev_sector;
 
-    uint8_t next_sector = (sector == (PROXIMITY_NUM_SECTORS - 1)) ? 0 : sector - 1;
-    uint8_t prev_sector = (sector == 0) ? PROXIMITY_NUM_SECTORS - 1 : sector - 1;
+    switch(sector) {
+        case 0:
+            next_sector = 1;
+            prev_sector = 7;
+            break;
 
+        case 1:
+            prev_sector = 0;
+            next_sector = 255;
+            break;
+
+        case 7:
+            prev_sector = 255;
+            next_sector = 0;
+            break;
+
+        default:
+            prev_sector = 255;
+            next_sector = 255;
+            break;
+    }
+        
     if (_distance_valid[next_sector]) {
         _closest.angle += (_closest.dist / _distance[next_sector]) * 0.5f * 45.0f;
     }
