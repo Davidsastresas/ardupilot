@@ -969,10 +969,10 @@ MAV_RESULT GCS_MAVLINK_Copter::handle_command_long_packet(const mavlink_command_
         case 3:
             if (packet.param2 <= 0) {
                 copter.avoid.proximity_avoidance_enable(false);
-                gcs().send_text(MAV_SEVERITY_INFO, "Distance mode disabled"); 
+                gcs().send_text(MAV_SEVERITY_INFO, "Lidars disabled"); 
             } else {
                 copter.avoid.proximity_avoidance_enable(true);
-                gcs().send_text(MAV_SEVERITY_INFO, "Distance mode enabled"); 
+                gcs().send_text(MAV_SEVERITY_INFO, "Lidars enabled"); 
             }
             return MAV_RESULT_ACCEPTED;
             break;
