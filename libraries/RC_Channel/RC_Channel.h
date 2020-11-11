@@ -191,6 +191,7 @@ public:
         ARSPD_CALIBRATE=      91, // calibrate airspeed ratio 
         PROXIMITY_AUTO_YAW =  92, // enable or disable automatic yawing to face closest obstacle
         PROX_DIST_HOLD  =     93, // enable / disable proximity distance hold
+        TAKE_PHOTO =          94, // Take single photo using Multinnovs PCB and PWM assigned values
 
         // entries from 100 onwards are expected to be developer
         // options used for testing
