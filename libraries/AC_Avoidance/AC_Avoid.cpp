@@ -96,6 +96,14 @@ const AP_Param::GroupInfo AC_Avoid::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("ACCEL_MAX", 8, AC_Avoid, _accel_max, 3.0f),
 
+    // @Param: MARGIN_ROOF
+    // @DisplayName: Avoidance distance for roof
+    // @Description: Vehicle will attempt to stay at least this distance (in meters) from surfaces directly in front of lidar set as TOP
+    // @Units: m
+    // @Range: 1 10
+    // @User: Standard
+    AP_GROUPINFO("MARGIN_RF", 7, AC_Avoid, _margin_roof, 2.0f),
+
     AP_GROUPEND
 };
 
