@@ -643,13 +643,18 @@ void RC_Channel_Copter::do_aux_function(const aux_func_t ch_option, const AuxSwi
 #endif
         break;
 
+        // We need to redo this part and make proper functions for camera in copter.h. Provisional for proof of concept
         case AUX_FUNC::TAKE_PHOTO:
             switch (ch_flag) {
             case AuxSwitchPos::HIGH:
-                SRV_Channels::set_output_pwm(SRV_Channel::k_cameraMode, 1520); //1520 corresponds to stop recording/Stop taking photo
+                // SRV_Channels::set_output_pwm(SRV_Channel::k_cameraMode, 1520); //1520 corresponds to stop recording/Stop taking photo
                 break;
             case AuxSwitchPos::LOW:
-                SRV_Channels::set_output_pwm(SRV_Channel::k_cameraMode, 1080); //1080 of PWM corresponds to take photo
+                if (!copter.mn_photo_triggered) {
+                    SRV_Channels::set_output_pwm(SRV_Channel::k_cameraMode, 1080); //1080 of PWM corresponds to take photo
+                    copter.mn_photo_triggered = true;
+                    copter.mn_photo_triggered_time = millis();
+                }
                 break;
             case AuxSwitchPos::MIDDLE:
                 break;

@@ -22,12 +22,19 @@ void Copter::userhook_50Hz()
 }
 #endif
 
-#ifdef USERHOOK_MEDIUMLOOP
+// #ifdef USERHOOK_MEDIUMLOOP
 void Copter::userhook_MediumLoop()
 {
-    // put your 10Hz code here
+    if( !mn_photo_triggered ) {
+        return;
+    }
+
+    if( millis() - mn_photo_triggered_time >= 350 ) {
+        SRV_Channels::set_output_pwm(SRV_Channel::k_cameraMode, 1520); //1520 corresponds to stop recording/Stop taking photo
+        mn_photo_triggered = false;
+    }
 }
-#endif
+// #endif
 
 #ifdef USERHOOK_SLOWLOOP
 void Copter::userhook_SlowLoop()
