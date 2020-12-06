@@ -630,10 +630,9 @@ void RC_Channel_Copter::do_aux_function(const aux_func_t ch_option, const AuxSwi
         case AUX_FUNC::TAKE_PHOTO:
             switch (ch_flag) {
             case AuxSwitchPos::HIGH:
-                SRV_Channels::set_output_pwm(SRV_Channel::k_cameraMode, 1520); //1520 corresponds to stop recording/Stop taking photo
                 break;
             case AuxSwitchPos::LOW:
-                SRV_Channels::set_output_pwm(SRV_Channel::k_cameraMode, 1080); //1080 of PWM corresponds to take photo
+                copter.trigger_multinnov_photo();
                 break;
             case AuxSwitchPos::MIDDLE:
                 break;
