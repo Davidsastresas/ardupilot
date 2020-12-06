@@ -222,6 +222,9 @@ void Copter::init_ardupilot()
         set_mode(Mode::Number::STABILIZE, ModeReason::UNAVAILABLE);
         AP_Notify::events.user_mode_change_failed = 1;
     }
+    
+    // Multinnov -- start leds at 1015 pwm power
+    SRV_Channels::set_output_pwm(SRV_Channel::k_ledsPower, 1015);
 
     // flag that initialisation has completed
     ap.initialised = true;
