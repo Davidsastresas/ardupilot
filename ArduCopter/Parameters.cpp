@@ -1031,16 +1031,6 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     AP_GROUPINFO("GUID_OPTIONS", 41, ParametersG2, guided_options, 0),
 #endif
 
-#if PROXIMITY_ENABLED == ENABLED
-    // @Param: AUTOYAW_MIN_DIST
-    // @DisplayName: Proximity auto yaw distance
-    // @Description: If a object is closer than this distace the vehicle will yaw to face it, 0 is disable
-    // @Units: m
-    // @Range: 2 5
-    // @User: Standard
-    AP_GROUPINFO("AUTOYAW_MIN_DIST", 42, ParametersG2, auto_yaw_min_dist, 0),
-#endif
-
     // @Param: FS_GCS_TIMEOUT
     // @DisplayName: GCS failsafe timeout
     // @Description: Timeout before triggering the GCS failsafe
@@ -1065,6 +1055,15 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Bitmask: 0:Disable thrust loss check, 1:Disable yaw imbalance warning
     // @User: Advanced
     AP_GROUPINFO("FLIGHT_OPTIONS", 44, ParametersG2, flight_options, 0),
+#if PROXIMITY_ENABLED == ENABLED
+    // @Param: AUTOYAW_MIN_DIST
+    // @DisplayName: Proximity auto yaw distance
+    // @Description: If a object is closer than this distace the vehicle will yaw to face it, 0 is disable
+    // @Units: m
+    // @Range: 2 5
+    // @User: Standard
+    AP_GROUPINFO("AUTOYAW_MIN_DIST", 45, ParametersG2, auto_yaw_min_dist, 0),
+#endif
 
     AP_GROUPEND
 };
