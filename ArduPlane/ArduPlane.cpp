@@ -71,6 +71,11 @@ const AP_Scheduler::Task Plane::scheduler_tasks[] = {
 #if MOUNT == ENABLED
     SCHED_TASK_CLASS(AP_Mount, &plane.camera_mount, update, 50, 100),
 #endif // MOUNT == ENABLED
+
+#if AP_AR_ECU == ENABLED
+    SCHED_TASK_CLASS(AP_AR_Ecu, &plane.g2.ar_ecu,      update, 30,  100),
+#endif
+
 #if CAMERA == ENABLED
     SCHED_TASK_CLASS(AP_Camera, &plane.camera, update_trigger, 50, 100),
 #endif // CAMERA == ENABLED

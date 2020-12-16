@@ -308,3 +308,7 @@
 #ifndef LANDING_GEAR_ENABLED
  #define LANDING_GEAR_ENABLED !HAL_MINIMIZE_FEATURES
 #endif
+
+#ifndef AP_AR_ECU
+ #define AP_AR_ECU ENABLED
+#endif

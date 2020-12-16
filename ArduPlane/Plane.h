@@ -93,6 +93,11 @@
 // Configuration
 #include "config.h"
 
+// Arys Ecu
+#if AP_AR_ECU == ENABLED
+ #include <AP_AR_Ecu/AP_AR_Ecu.h>
+#endif
+
 #if ADVANCED_FAILSAFE == ENABLED
 #include "afs_plane.h"
 #endif

@@ -572,6 +572,11 @@ public:
 
     // min initial climb in RTL
     AP_Int16        rtl_climb_min;
+
+    // Arys Ecu
+#if AP_AR_ECU == ENABLED
+    AP_AR_Ecu ar_ecu;
+#endif
 };
 
 extern const AP_Param::Info var_info[];
