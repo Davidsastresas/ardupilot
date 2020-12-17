@@ -40,7 +40,6 @@ void AP_AR_Ecu::init(void) {
 // this will be sent managed by GCS mavlink stream rates
 void AP_AR_Ecu::send_mavlink_message_ecu(const mavlink_channel_t chan) {
  
-    gcs().send_text(MAV_SEVERITY_INFO, "Sending stuff");
     mavlink_msg_ar_efi_telemetry_send(
         chan,
         _coolant,
