@@ -40,9 +40,11 @@ public:
 
     void init();
 
-    bool healthy() { return _healthy; }
+    bool healthy() const { return _healthy; } 
 
     void send_mavlink_message_ecu(const mavlink_channel_t chan);
+
+    uint16_t get_rpm() const { return _rpm; }
 
     static AP_AR_Ecu *get_singleton() { return _singleton; }
 

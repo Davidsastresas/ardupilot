@@ -20,11 +20,12 @@
 
 #include <AP_HAL/AP_HAL.h>
 #include <AP_RPM/AP_RPM.h>
+#include <AP_AR_Ecu/AP_AR_Ecu.h>
 
 class AP_ICEngine {
 public:
     // constructor
-    AP_ICEngine(const AP_RPM &_rpm);
+    AP_ICEngine(const AP_RPM &_rpm, const AP_AR_Ecu &_ecu);
 
     static const struct AP_Param::GroupInfo var_info[];
 
@@ -54,6 +55,8 @@ private:
     static AP_ICEngine *_singleton;
 
     const AP_RPM &rpm;
+
+    const AP_AR_Ecu &ar_ecu;
 
     enum ICE_State state;
 

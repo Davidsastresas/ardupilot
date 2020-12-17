@@ -114,8 +114,9 @@ const AP_Param::GroupInfo AP_ICEngine::var_info[] = {
 
 
 // constructor
-AP_ICEngine::AP_ICEngine(const AP_RPM &_rpm) :
-    rpm(_rpm)
+AP_ICEngine::AP_ICEngine(const AP_RPM &_rpm, const AP_AR_Ecu &_ecu) :
+    rpm(_rpm),
+    ar_ecu(_ecu)
 {
     AP_Param::setup_object_defaults(this, var_info);
 
@@ -198,9 +199,15 @@ void AP_ICEngine::update(void)
         if (!should_run) {
             state = ICE_OFF;
             gcs().send_text(MAV_SEVERITY_INFO, "Stopped engine");
+        
+        // check RPM to see if still running
         } else if (rpm_instance > 0) {
-            // check RPM to see if still running
-            if (!rpm.healthy(rpm_instance-1) ||
+            if ( rpm_instance == 3 ) {
+                if ( !ar_ecu.healthy() || ar_ecu.get_rpm() < rpm_threshold ) {
+                    // engine has stopped when it should be running
+                    state = ICE_START_DELAY;
+                }
+            } else if (!rpm.healthy(rpm_instance-1) ||
                 rpm.get_rpm(rpm_instance-1) < rpm_threshold) {
                 // engine has stopped when it should be running
                 state = ICE_START_DELAY;
@@ -289,6 +296,7 @@ bool AP_ICEngine::engine_control(float start_control, float cold_start, float he
 {
     if (start_control <= 0) {
         state = ICE_OFF;
+        gcs().send_text(MAV_SEVERITY_INFO, "Engine: Stopping engine");
         return true;
     }
     RC_Channel *c = rc().channel(start_chan-1);
@@ -308,6 +316,7 @@ bool AP_ICEngine::engine_control(float start_control, float cold_start, float he
         return true;
     }
     state = ICE_STARTING;
+    gcs().send_text(MAV_SEVERITY_INFO, "Engine: Starting engine");
     return true;
 }
 
