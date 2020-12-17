@@ -40,6 +40,8 @@ public:
 
     void init();
 
+    bool healthy() { return _healthy; }
+
     void send_mavlink_message_ecu(const mavlink_channel_t chan);
 
     static AP_AR_Ecu *get_singleton() { return _singleton; }
@@ -150,6 +152,7 @@ private:
 
     // variables for fuel consumption calculation
     uint32_t _last_time_micros = 0;
+    bool _healthy = false;
 };
 
 namespace AP {

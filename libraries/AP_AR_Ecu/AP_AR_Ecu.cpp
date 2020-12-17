@@ -80,6 +80,13 @@ void AP_AR_Ecu::read_incoming(void) {
 
     numc = _port->available();
 
+    // not the best way of determining if it is healthy but the best we got so far
+    if (numc < 110) {
+        _healthy = false;
+    } else {
+        _healthy = true;
+    }
+
     if (numc < 0 ){
         return;
     }
