@@ -556,6 +556,23 @@ void Plane::set_servos_flaps(void)
         }
     }
 
+    switch (plane._gcs_flap_state) {
+        case 0:
+            auto_flap_percent = 0;
+            break;
+
+        case 1:
+            auto_flap_percent = g.flap_1_percent;
+            break;
+
+        case 2:
+            auto_flap_percent = g.flap_2_percent;
+            break;
+
+        default:
+            break;
+    }
+
     // manual flap input overrides auto flap input
     if (abs(manual_flap_percent) > auto_flap_percent) {
         auto_flap_percent = manual_flap_percent;

@@ -1023,6 +1023,10 @@ MAV_RESULT GCS_MAVLINK_Plane::handle_command_long_packet(const mavlink_command_l
         }
         return MAV_RESULT_ACCEPTED;
 
+    case MAV_CMD_FLAP_ACTION:
+            handle_command_flap_action(packet);
+        return MAV_RESULT_ACCEPTED;
+
     default:
         return GCS_MAVLINK::handle_command_long_packet(packet);
     }
@@ -1414,4 +1418,21 @@ uint64_t GCS_MAVLINK_Plane::capabilities() const
 #endif
             MAV_PROTOCOL_CAPABILITY_COMPASS_CALIBRATION |
             GCS_MAVLINK::capabilities());
+}
+
+MAV_RESULT GCS_MAVLINK_Plane::handle_command_flap_action(const mavlink_command_long_t &packet)
+{
+    if ( (uint8_t)packet.param1 == 0 || (uint8_t)packet.param1 == 1 || (uint8_t)packet.param1 == 2 ) {
+
+        plane._gcs_flap_state = (uint8_t)packet.param1;
+
+        gcs().send_text(MAV_SEVERITY_INFO, "Override flap to pos %.0f",
+                        (double)packet.param1);  
+    } else {
+        
+        plane._gcs_flap_state = 3;
+
+        gcs().send_text(MAV_SEVERITY_INFO, "Change flaps to auto");
+    }
+    return MAV_RESULT_ACCEPTED;
 }
