@@ -1,5 +1,6 @@
 #include "AP_AR_Ecu.h"
 #include <AP_Param/AP_Param.h>
+#include <GCS_MAVLink/GCS.h>
 #include <AP_SerialManager/AP_SerialManager.h>
 #include <AP_HAL/utility/sparse-endian.h>
 
@@ -34,6 +35,23 @@ void AP_AR_Ecu::init(void) {
 
         gcs().send_text(MAV_SEVERITY_INFO, "Ecu Driver initialized");
     }
+}
+
+// this will be sent managed by GCS mavlink stream rates
+void AP_AR_Ecu::send_mavlink_message_ecu(const mavlink_channel_t chan) {
+ 
+    gcs().send_text(MAV_SEVERITY_INFO, "Sending stuff");
+    mavlink_msg_ar_efi_telemetry_send(
+        chan,
+        _coolant,
+        _rpm,
+        _barometer,
+        _tps,
+        _batteryVoltage,
+        _fuel_instant,
+        _fuel_consumed,
+        _fuel_remaining
+    );
 }
 
 void AP_AR_Ecu::update(void) {

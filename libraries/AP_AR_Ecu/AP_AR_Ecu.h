@@ -40,6 +40,8 @@ public:
 
     void init();
 
+    void send_mavlink_message_ecu(const mavlink_channel_t chan);
+
     static AP_AR_Ecu *get_singleton() { return _singleton; }
 
 private:
