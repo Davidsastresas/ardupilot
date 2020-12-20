@@ -119,6 +119,14 @@ void AP_AR_Ecu::read_incoming(void) {
 
 void AP_AR_Ecu::calc_fuel_consumption() {
 
+    if (!_initialised) {
+        return;
+    }
+
+    if (is_zero(_fuel_density_k) || is_zero(_fuel_density) || is_zero(_static_inj_flow_rate)) {
+        return;
+    }
+    
     uint32_t tnow = AP_HAL::micros();
     float dt = tnow - _last_time_micros;
 
