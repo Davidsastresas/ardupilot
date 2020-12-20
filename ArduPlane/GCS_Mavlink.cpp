@@ -1034,7 +1034,7 @@ MAV_RESULT GCS_MAVLINK_Plane::handle_command_long_packet(const mavlink_command_l
 
             // 1 - Set fuel
             case 1:
-                plane.g2.ar_ecu.set_current_fuel((uint8_t)packet.param2);
+                plane.g2.ar_ecu.set_current_fuel(packet.param2);
                 return MAV_RESULT_ACCEPTED;
 
             default:
