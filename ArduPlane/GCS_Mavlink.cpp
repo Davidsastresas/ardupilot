@@ -1026,6 +1026,22 @@ MAV_RESULT GCS_MAVLINK_Plane::handle_command_long_packet(const mavlink_command_l
     case MAV_CMD_FLAP_ACTION:
             handle_command_flap_action(packet);
         return MAV_RESULT_ACCEPTED;
+    
+    case MAV_CMD_USER_1: {
+
+        // we take param1 for each cmd
+        switch((uint8_t)packet.param1) {
+
+            // 1 - Set fuel
+            case 1:
+                plane.g2.ar_ecu.set_current_fuel((uint8_t)packet.param2);
+                return MAV_RESULT_ACCEPTED;
+
+            default:
+                return MAV_RESULT_FAILED;
+        }
+        return MAV_RESULT_FAILED;
+    }
 
     default:
         return GCS_MAVLINK::handle_command_long_packet(packet);

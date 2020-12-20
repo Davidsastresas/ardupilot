@@ -46,6 +46,8 @@ public:
 
     uint16_t get_rpm() const { return _rpm; }
 
+    void set_current_fuel(float fuel);
+
     static AP_AR_Ecu *get_singleton() { return _singleton; }
 
 private:

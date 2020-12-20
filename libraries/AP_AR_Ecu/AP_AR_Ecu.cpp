@@ -37,6 +37,16 @@ void AP_AR_Ecu::init(void) {
     }
 }
 
+void AP_AR_Ecu::set_current_fuel(float fuel) { 
+
+    if (!_initialised) {
+        gcs().send_text(MAV_SEVERITY_WARNING,"Ecu Driver not initialized");
+        return;
+    }
+
+    _fuel_remaining = fuel;
+}
+
 // this will be sent managed by GCS mavlink stream rates
 void AP_AR_Ecu::send_mavlink_message_ecu(const mavlink_channel_t chan) {
  
