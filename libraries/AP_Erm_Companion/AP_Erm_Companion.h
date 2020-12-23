@@ -38,6 +38,7 @@ private:
     };
 
     struct PACKED tracking_coord_feedback {
+        uint8_t  confindence;
         uint16_t x0;
         uint16_t y0;
         uint16_t x1;
@@ -70,7 +71,7 @@ private:
 
     bool _tracking_active = false;
 
-    uint8_t _status;
+    uint8_t _confidence;
     uint16_t _x0;    
     uint16_t _x1;    
     uint16_t _y0;    
