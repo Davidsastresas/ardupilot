@@ -150,9 +150,7 @@ private:
     uint16_t _pulseWidth1;
 
     // parameters
-    AP_Float _static_inj_flow_rate;
-    AP_Float _fuel_density;
-    AP_Float _fuel_density_k;
+    AP_Float _fuel_ecuation_k;
 
     // variables for fuel consumption calculation
     uint32_t _last_time_micros = 0;

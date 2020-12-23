@@ -8,11 +8,7 @@ extern const AP_HAL::HAL& hal;
 
 const AP_Param::GroupInfo AP_AR_Ecu::var_info[] = {
 
-    AP_GROUPINFO("STATIC_FRATE", 1, AP_AR_Ecu, _static_inj_flow_rate, 1.0f),
-
-    AP_GROUPINFO("FUEL_DENS", 2, AP_AR_Ecu, _fuel_density, 1.0f),
-
-    AP_GROUPINFO("FUEL_DENS_K", 3, AP_AR_Ecu, _fuel_density_k, 1.0f),
+    AP_GROUPINFO("FUEL_K", 1, AP_AR_Ecu, _fuel_ecuation_k, 1.05833f),
 
     AP_GROUPEND
 };
@@ -122,24 +118,30 @@ void AP_AR_Ecu::calc_fuel_consumption() {
     if (!_initialised) {
         return;
     }
-
-    if (is_zero(_fuel_density_k) || is_zero(_fuel_density) || is_zero(_static_inj_flow_rate)) {
-        return;
-    }
     
+    // get time delta
     uint32_t tnow = AP_HAL::micros();
     float dt = tnow - _last_time_micros;
 
-    float pulsewidth = _pulseWidth1 * 0.001;
-    float inj_duty = ( pulsewidth * _rpm ) / 60;
-    _fuel_instant = ( inj_duty * _static_inj_flow_rate * _fuel_density ) / _fuel_density_k;
+    // prepare for ecuation
+    float pulsewidths = _pulseWidth1 * 0.000001f;
+    float rps = _rpm / 60;
+
+     // constant * pulsewidth1 * rpm / ( 1000 * 1000 * 60 )
+    float fuel_rate = _fuel_ecuation_k * pulsewidths * rps; // ml/s
+
+    //  .0002778 is 1/3600 (conversion to hours)
+    //  .0002778 * 1000 is 0.2788 (conversion to liters)
+    _fuel_instant = fuel_rate * 0.2778f;
 
     if (_last_time_micros != 0 && dt < 2000000.0f) {
 
-        // .0002778 is 1/3600 (conversion to hours)
-        float fuel_consumed = _fuel_instant * dt * 0.0000002778f;
-        _fuel_consumed += fuel_consumed;
-        _fuel_remaining -= fuel_consumed;
+        // fuel_rate * dt(s) is consumption in last interval, in ml
+        float fuel_acum = fuel_rate * dt * 0.000000001f; // liters
+
+        // Those are liters
+        _fuel_consumed += fuel_acum;
+        _fuel_remaining -= fuel_acum;
     }
 
     // record time
