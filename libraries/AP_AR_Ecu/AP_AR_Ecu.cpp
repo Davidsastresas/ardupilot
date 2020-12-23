@@ -130,9 +130,9 @@ void AP_AR_Ecu::calc_fuel_consumption() {
      // constant * pulsewidth1 * rpm / ( 1000 * 1000 * 60 )
     float fuel_rate = _fuel_ecuation_k * pulsewidths * rps; // ml/s
 
-    //  .0002778 is 1/3600 (conversion to hours)
-    //  .0002778 * 1000 is 0.2788 (conversion to liters)
-    _fuel_instant = fuel_rate * 0.2778f;
+    //  * 3600 (conversion to hours)
+    //  3600 * 0.001 is 3.6 (conversion to liters)
+    _fuel_instant = fuel_rate * 3.6f;
 
     if (_last_time_micros != 0 && dt < 2000000.0f) {
 
