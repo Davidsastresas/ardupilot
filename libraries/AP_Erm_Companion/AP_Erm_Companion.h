@@ -76,6 +76,8 @@ private:
     uint16_t _x1;    
     uint16_t _y0;    
     uint16_t _y1;
+
+    int _confidence_zero_counter = 0;
 };
 
 namespace AP {

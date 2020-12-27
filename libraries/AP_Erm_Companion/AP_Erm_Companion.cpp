@@ -60,23 +60,22 @@ void AP_Erm_Companion::read_incoming(void) {
         switch (_step) {
             case 0:
                 if ( 0x0E == data ) {
-                    // gcs().send_text(MAV_SEVERITY_INFO, "header ok");
                     _step++;
                     _checksum = data;
                 } else {
-                    _confidence = 0;
+                    // gcs().send_text(MAV_SEVERITY_INFO, "header not ok");
+                    _confidence_zero_counter++;
                 }
                 break;
 
             case 1:
                 if ( 0x05 == data) {
-                    // gcs().send_text(MAV_SEVERITY_INFO, "comand header ok");
                     _step++;
                     _checksum += data;
                 } else {
                     _step = 0;
-                    _confidence = 0;
                     // gcs().send_text(MAV_SEVERITY_INFO, "command header not ok");
+                    _confidence_zero_counter++;
                 }
                 break;
 
@@ -92,22 +91,27 @@ void AP_Erm_Companion::read_incoming(void) {
             case 3:// body checksum
                 _step = 0;
                 if (_checksum  != data) {
-                    _confidence = 0;
+                    _confidence_zero_counter++;
                     // gcs().send_text(MAV_SEVERITY_INFO, "wrong checksum");
                     break;
                 }
                 // gcs().send_text(MAV_SEVERITY_INFO, "status bit: %x", _receiveBuffer[0]);
                 parse_body();
+                _confidence_zero_counter = 0;
                 break;
 
             default:
                 // gcs().send_text(MAV_SEVERITY_INFO, "step isnt right");
                 _step = 0;
-                _confidence = 0;
+                _confidence_zero_counter++;
                 break;
         }
     }
 
+    if (_confidence_zero_counter > 37) {
+        _confidence_zero_counter = 0;
+        _confidence = 0;
+    }
 }
 
 void AP_Erm_Companion::parse_body(void) {
