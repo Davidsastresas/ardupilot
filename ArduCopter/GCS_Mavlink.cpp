@@ -392,7 +392,7 @@ const AP_Param::GroupInfo GCS_MAVLINK_Parameters::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("ADSB",   9, GCS_MAVLINK_Parameters, streamRates[9],  0),
 
-    AP_GROUPINFO("TRACKER",   10, GCS_MAVLINK_Parameters, streamRates[10],  1),
+    AP_GROUPINFO("TRACKER",   10, GCS_MAVLINK_Parameters, streamRates[10],  10),
 
 AP_GROUPEND
 };
