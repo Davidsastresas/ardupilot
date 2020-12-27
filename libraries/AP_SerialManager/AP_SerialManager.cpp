@@ -474,8 +474,6 @@ void AP_SerialManager::init()
                     break;
 #endif
                 case SerialProtocol_AR_Erm_Companion:
-                    // Note baudrate is hardcoded to 115200
-                    state[i].baud = 115200 / 1000;   // update baud param in case user looks at it
                     state[i].uart->begin(map_baudrate(state[i].baud),
                                          256,
                                          128);
