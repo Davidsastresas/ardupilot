@@ -124,6 +124,10 @@ void AP_Erm_Companion::parse_body(void) {
 }
 
 void AP_Erm_Companion::send_tracker_status(mavlink_channel_t chan) {
+    
+    if (!_initialised) {
+        return;
+    }
 
     mavlink_msg_erm_tracker_send(chan, _confidence, _x0, _x1, _y0, _y1);
 }
@@ -155,6 +159,10 @@ void AP_Erm_Companion::send_command(uint8_t cmd, uint8_t* data, uint8_t size)
 
 void AP_Erm_Companion::startTracking(uint16_t x0, uint16_t x1, uint16_t y0, uint16_t y1) {
 
+    if (!_initialised) {
+        return;
+    }
+
     // gcs().send_text(MAV_SEVERITY_INFO, "start tracking x0: %d x1: %d y0: %d y1: %d", x0, x1, y0, y1);
     // gcs().send_text(MAV_SEVERITY_INFO, "start tracking cmd: %x %x %x %x %x", 0x0E, x0, x1, y0, y1);
 
@@ -167,6 +175,10 @@ void AP_Erm_Companion::startTracking(uint16_t x0, uint16_t x1, uint16_t y0, uint
 }
 
 void AP_Erm_Companion::stopTracking() {
+
+    if (!_initialised) {
+        return;
+    }
     
     send_byte(0x0E);
     send_byte(0x02);
