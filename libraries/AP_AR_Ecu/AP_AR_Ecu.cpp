@@ -8,7 +8,7 @@ extern const AP_HAL::HAL& hal;
 
 const AP_Param::GroupInfo AP_AR_Ecu::var_info[] = {
 
-    AP_GROUPINFO("FUEL_K", 1, AP_AR_Ecu, _fuel_ecuation_k, 1.05833f),
+    AP_GROUPINFO("FUEL_K", 0, AP_AR_Ecu, _fuel_ecuation_k, 1.05833f),
 
     AP_GROUPEND
 };
