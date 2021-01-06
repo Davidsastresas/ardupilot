@@ -1,5 +1,6 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_HAL/utility/sparse-endian.h>
+#include <GCS_MAVLink/GCS.h>
 
 #include "AP_ADC_ADS1115.h"
 
@@ -8,8 +9,8 @@
 #define ADS1115_ADDRESS_ADDR_SDA    0x4A // address pin tied to SDA pin
 #define ADS1115_ADDRESS_ADDR_SCL    0x4B // address pin tied to SCL pin
 
-#define ADS1115_I2C_ADDR            ADS1115_ADDRESS_ADDR_GND
-#define ADS1115_I2C_BUS             1
+#define ADS1115_I2C_ADDR            ADS1115_ADDRESS_ADDR_SCL
+#define ADS1115_I2C_BUS             0
 
 #define ADS1115_RA_CONVERSION       0x00
 #define ADS1115_RA_CONFIG           0x01
@@ -93,14 +94,12 @@
 
 extern const AP_HAL::HAL &hal;
 
-#define ADS1115_CHANNELS_COUNT           6
+#define ADS1115_CHANNELS_COUNT           4
 
 const uint8_t AP_ADC_ADS1115::_channels_number  = ADS1115_CHANNELS_COUNT;
 
 /* Only two differential channels used */
 static const uint16_t mux_table[ADS1115_CHANNELS_COUNT] = {
-    ADS1115_MUX_P1_N3,
-    ADS1115_MUX_P2_N3,
     ADS1115_MUX_P0_NG,
     ADS1115_MUX_P1_NG,
     ADS1115_MUX_P2_NG,
@@ -224,6 +223,8 @@ void AP_ADC_ADS1115::_update()
     _samples[_channel_to_read].data = sample;
     _samples[_channel_to_read].id = _channel_to_read;
 
+    //gcs().send_text(MAV_SEVERITY_INFO, "ads1115: %.3f", sample * 0.001);
+    
     /* select next channel */
     _channel_to_read = (_channel_to_read + 1) % _channels_number;
     _start_conversion(_channel_to_read);
