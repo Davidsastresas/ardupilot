@@ -23,7 +23,6 @@
 
 #include <AP_HAL/AP_HAL.h>
 
-// just for debugging
 #include <GCS_MAVLink/GCS.h>
 
 //definition of commands

@@ -1,6 +1,5 @@
 #include "AP_AR_Ecu.h"
 #include <AP_Param/AP_Param.h>
-#include <GCS_MAVLink/GCS.h>
 #include <AP_SerialManager/AP_SerialManager.h>
 #include <AP_HAL/utility/sparse-endian.h>
 
