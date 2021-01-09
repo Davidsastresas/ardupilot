@@ -4,6 +4,8 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_HAL/I2CDevice.h>
 
+#include <GCS_MAVLink/GCS.h>
+
 struct adc_report_s
 {
     uint8_t id;
@@ -16,8 +18,12 @@ public:
     AP_ADC_ADS1115();
     ~AP_ADC_ADS1115();
 
+    static const struct AP_Param::GroupInfo var_info[];
+
     bool init();
     size_t read(adc_report_s *report, size_t length) const;
+
+    void send_mavlink_message_adc_arys(const mavlink_channel_t chan);
 
     uint8_t get_channels_number() const
     {
@@ -29,9 +35,14 @@ private:
 
     AP_HAL::OwnPtr<AP_HAL::I2CDevice> _dev;
 
+    // semaphore for access to shared frontend data
+    HAL_Semaphore _sem;
+
     uint16_t            _gain;
     int                 _channel_to_read;
     adc_report_s        *_samples;
+
+    AP_Int8             _gainParam;
 
     void _update();
     bool _start_conversion(uint8_t channel);

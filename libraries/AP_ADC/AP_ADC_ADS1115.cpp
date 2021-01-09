@@ -1,6 +1,6 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_HAL/utility/sparse-endian.h>
-#include <GCS_MAVLink/GCS.h>
+#include <AP_Param/AP_Param.h>
 
 #include "AP_ADC_ADS1115.h"
 
@@ -98,6 +98,15 @@ extern const AP_HAL::HAL &hal;
 
 const uint8_t AP_ADC_ADS1115::_channels_number  = ADS1115_CHANNELS_COUNT;
 
+const AP_Param::GroupInfo AP_ADC_ADS1115::var_info[] = {
+
+    // This param controls the gain for the adc
+    // 0: 6P144 1: 4P096 2: 2P048 3: 1P024 4: 0P512 5: 0P256 6: 0P256B 7: 0P256C
+    AP_GROUPINFO("GAIN_ID", 0, AP_ADC_ADS1115, _gainParam, 1),
+
+    AP_GROUPEND
+};
+
 /* Only two differential channels used */
 static const uint16_t mux_table[ADS1115_CHANNELS_COUNT] = {
     ADS1115_MUX_P0_NG,
@@ -127,7 +136,37 @@ bool AP_ADC_ADS1115::init()
         return false;
     }
 
-    _gain = ADS1115_PGA_4P096;
+    switch (_gainParam) {
+    case 0:
+        _gain = ADS1115_MV_6P144;
+        break;
+    case 1:
+        _gain = ADS1115_MV_4P096;
+        break;
+    case 2:
+        _gain = ADS1115_MV_2P048;
+        break;
+    case 3:
+        _gain = ADS1115_MV_1P024;
+        break;
+    case 4:
+        _gain = ADS1115_MV_0P512;
+        break;
+    case 5:
+        _gain = ADS1115_MV_0P256;
+        break;
+    case 6:
+        _gain = ADS1115_MV_0P256B;
+        break;
+    case 7:
+        _gain = ADS1115_MV_0P256C;
+        break;
+    default:
+        hal.console->printf("ADS1115: Wrong gain");
+        AP_HAL::panic("ADS1115: wrong gain selected");
+        _gain = ADS1115_PGA_4P096;
+        break;
+    }
 
     _dev->register_periodic_callback(100000, FUNCTOR_BIND_MEMBER(&AP_ADC_ADS1115::_update, void));
 
@@ -201,6 +240,8 @@ float AP_ADC_ADS1115::_convert_register_data_to_mv(int16_t word) const
 
 void AP_ADC_ADS1115::_update()
 {
+    WITH_SEMAPHORE(_sem);
+
     uint8_t config[2];
     be16_t val;
 
@@ -228,4 +269,18 @@ void AP_ADC_ADS1115::_update()
     /* select next channel */
     _channel_to_read = (_channel_to_read + 1) % _channels_number;
     _start_conversion(_channel_to_read);
+}
+
+void AP_ADC_ADS1115::send_mavlink_message_adc_arys(const mavlink_channel_t chan) {
+
+    WITH_SEMAPHORE(_sem);
+
+    mavlink_msg_ar_adc_send(
+        chan,
+        1,
+        _samples[0].data,
+        _samples[1].data,
+        _samples[2].data,
+        _samples[3].data
+    );
 }
