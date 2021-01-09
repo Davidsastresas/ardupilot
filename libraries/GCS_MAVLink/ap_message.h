@@ -74,5 +74,6 @@ enum ap_message : uint8_t {
     MSG_EXTENDED_SYS_STATE,
     MSG_AUTOPILOT_VERSION,
     MSG_AR_ECU,
+    MSG_AR_ADC,
     MSG_LAST // MSG_LAST must be the last entry in this enum
 };

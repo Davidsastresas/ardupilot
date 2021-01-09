@@ -445,6 +445,9 @@ bool GCS_MAVLINK_Plane::try_send_message(enum ap_message id)
     case MSG_AR_ECU:
         plane.g2.ar_ecu.send_mavlink_message_ecu(chan);
         break;
+    case MSG_AR_ADC:
+        plane.g2.ar_adc.send_mavlink_message_adc_arys(chan);
+        break;
     
     default:
         return GCS_MAVLINK::try_send_message(id);
@@ -630,7 +633,8 @@ static const ap_message STREAM_ADSB_msgs[] = {
 
 // Arys specific entries
 static const ap_message STREAM_ARYS_msgs[] = {
-    MSG_AR_ECU
+    MSG_AR_ECU,
+    MSG_AR_ADC
 };
 
 const struct GCS_MAVLINK::stream_entries GCS_MAVLINK::all_stream_entries[] = {
