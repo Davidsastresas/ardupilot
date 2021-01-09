@@ -97,6 +97,7 @@
 #if AP_AR_ECU == ENABLED
  #include <AP_AR_Ecu/AP_AR_Ecu.h>
 #endif
+#include <AP_ADC/AP_ADC_ADS1115.h>
 
 #if ADVANCED_FAILSAFE == ENABLED
 #include "afs_plane.h"
