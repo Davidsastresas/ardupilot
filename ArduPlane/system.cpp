@@ -141,6 +141,8 @@ void Plane::init_ardupilot()
     g2.ar_ecu.init();
 #endif
 
+    g2.ar_adc.init();
+
 #if FENCE_TRIGGERED_PIN > 0
     hal.gpio->pinMode(FENCE_TRIGGERED_PIN, HAL_GPIO_OUTPUT);
     hal.gpio->write(FENCE_TRIGGERED_PIN, 0);
