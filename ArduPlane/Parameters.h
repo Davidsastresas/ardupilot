@@ -577,6 +577,7 @@ public:
 #if AP_AR_ECU == ENABLED
     AP_AR_Ecu ar_ecu;
 #endif
+    AP_ADC_ADS1115 ar_adc;
 };
 
 extern const AP_Param::Info var_info[];

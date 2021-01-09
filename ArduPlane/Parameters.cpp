@@ -1274,6 +1274,10 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Group: ECU_
     // @Path: ../libraries/AP_AR_Ecu/AP_AR_Ecu.cpp
     AP_SUBGROUPINFO(ar_ecu, "ECU_", 28, ParametersG2, AP_AR_Ecu),
+    
+    // @Group: ADC_
+    // @Path: ../libraries/AP_ADC/AP_ADC_ADS1115.cpp
+    AP_SUBGROUPINFO(ar_adc, "ADC_", 29, ParametersG2, AP_ADC_ADS1115),
 
     AP_GROUPEND
 };
