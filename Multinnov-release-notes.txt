@@ -1,3 +1,8 @@
+MN-Uaview-stereo-v2.1
+
+Rebased to master on 22 January 2021. Some PR for initial flight mode were added, and also some EK3 PR 
+that could be handy to us.
+
 MN-Uaview-stereo-v2.0
 
 Rebased to master on 12 december 2020, in order to get the new ekf lane functionality. Besides that,
