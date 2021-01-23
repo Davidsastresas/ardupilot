@@ -1001,24 +1001,6 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     AP_GROUPINFO("GUID_OPTIONS", 41, ParametersG2, guided_options, 0),
 #endif
 
-    // @Param: FS_GCS_TIMEOUT
-    // @DisplayName: GCS failsafe timeout
-    // @Description: Timeout before triggering the GCS failsafe
-    // @Units: s
-    // @Range: 2 120
-    // @Increment: 1
-    // @User: Standard
-    AP_GROUPINFO("FS_GCS_TIMEOUT", 42, ParametersG2, fs_gcs_timeout, 5),
-
-#if MODE_RTL_ENABLED == ENABLED
-    // @Param: RTL_OPTIONS
-    // @DisplayName: RTL mode options
-    // @Description: Options that can be applied to change RTL mode behaviour
-    // @Bitmask: 2:Ignore pilot yaw
-    // @User: Advanced
-    AP_GROUPINFO("RTL_OPTIONS", 43, ParametersG2, rtl_options, 0),
-#endif
-
 #if PROXIMITY_ENABLED == ENABLED
     // @Param: AUTOYAW_MIN_DIST
     // @DisplayName: Proximity auto yaw distance
@@ -1026,7 +1008,7 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Units: m
     // @Range: 2 5
     // @User: Standard
-    AP_GROUPINFO("AUTOYAW_MIN_DIST", 44, ParametersG2, auto_yaw_min_dist, 0),
+    AP_GROUPINFO("AUTOYAW_MIN_DIST", 43, ParametersG2, auto_yaw_min_dist, 0),
 #endif
 
     AP_GROUPEND
