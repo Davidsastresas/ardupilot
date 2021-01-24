@@ -20,4 +20,5 @@ we also implemented here:
 
 MN-Uaview-stereo-v1.0
 
-First iteration, rebased 2 days before sending the prototype
+First iteration, rebased 2 days before sending the prototype. This is considered the stable version. It has the
+same features as 2.0 but it is from an older master
