@@ -224,7 +224,7 @@ void Copter::init_ardupilot()
     BoardConfig.init_safety();
 
     // Set multinov led pwm to 1015 so the led board does not go nuts
-    SRV_Channels::set_output_pwm(SRV_Channel::k_ledsPower, 1015);
+    SRV_Channels::set_output_pwm(SRV_Channel::k_ledsPower, 1001);
     
     // attempt to switch to RTL, if this fails then switch to Land
     if (!set_mode((enum Mode::Number)g.initial_mode.get(), ModeReason::INITIALISED)) {
