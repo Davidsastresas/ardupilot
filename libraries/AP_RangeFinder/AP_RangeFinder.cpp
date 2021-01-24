@@ -289,7 +289,7 @@ void RangeFinder::init(enum Rotation orientation_default)
         state[i].status = Status::NotConnected;
         state[i].range_valid_count = 0;
     }
-    if (num_instances < 5 ) {
+    if (num_instances < 4 ) {
         gcs().send_text(MAV_SEVERITY_WARNING, "Some lidars were not initialized, only %d detected", num_instances);
     }
 }
