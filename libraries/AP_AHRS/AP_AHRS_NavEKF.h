@@ -312,8 +312,8 @@ public:
 
     void Log_Write();
 
-    // check whether external navigation is providing yaw.  Allows compass pre-arm checks to be bypassed
-    bool is_ext_nav_used_for_yaw(void) const override;
+    // returns true if external yaw source (GPS or External Nav) is providing yaw.  Allows compass pre-arm checks to be bypassed
+    bool using_external_yaw(void) const override;
 
     // set and save the ALT_M_NSE parameter value
     void set_alt_measurement_noise(float noise) override;

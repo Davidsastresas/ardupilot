@@ -2774,8 +2774,8 @@ AP_AHRS_NavEKF &AP::ahrs_navekf()
     return static_cast<AP_AHRS_NavEKF&>(*AP_AHRS::get_singleton());
 }
 
-// check whether compass can be bypassed for arming check in case when external navigation data is available 
-bool AP_AHRS_NavEKF::is_ext_nav_used_for_yaw(void) const
+// returns true if GPS or External Nav is providing yaw.  Allows compass pre-arm checks to be bypassed
+bool AP_AHRS_NavEKF::using_external_yaw(void) const
 {
     switch (active_EKF_type()) {
 #if HAL_NAVEKF2_AVAILABLE
