@@ -360,7 +360,7 @@ public:
     // write EKF information to on-board logs
     void Log_Write();
 
-    // are we using an external yaw source? This is needed by AHRS attitudes_consistent check
+    // are we using an external yaw source (GPS or External Nav)? This is needed by AHRS attitudes_consistent check
     bool using_external_yaw(void) const;
 
     // check if configured to use GPS for horizontal position estimation

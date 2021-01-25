@@ -534,7 +534,7 @@ bool NavEKF3_core::use_compass(void) const
            !allMagSensorsFailed;
 }
 
-// are we using a yaw source other than the magnetomer?
+// are we using an external yaw source (GPS or External Nav)? This is needed by AHRS attitudes_consistent check
 bool NavEKF3_core::using_external_yaw(void) const
 {
 #if EK3_FEATURE_EXTERNAL_NAV

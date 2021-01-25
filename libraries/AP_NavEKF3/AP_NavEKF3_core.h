@@ -378,7 +378,7 @@ public:
         // 6 was EXTERNAL_YAW_FALLBACK (do not use)
     };
 
-    // are we using an external yaw source? This is needed by AHRS attitudes_consistent check
+    // are we using an external yaw source (GPS or External Nav)? This is needed by AHRS attitudes_consistent check
     bool using_external_yaw(void) const;
 
     // Writes the default equivalent airspeed in m/s to be used in forward flight if a measured airspeed is required and not available.

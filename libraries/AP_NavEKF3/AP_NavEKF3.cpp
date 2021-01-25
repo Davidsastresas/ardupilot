@@ -1430,7 +1430,7 @@ bool NavEKF3::use_compass(void) const
     return core[primary].use_compass();
 }
 
-// are we using an external yaw source? Needed for ahrs attitudes_consistent
+// are we using an external yaw source (GPS or External Nav)? This is needed by AHRS attitudes_consistent check
 bool NavEKF3::using_external_yaw(void) const
 {
     if (!core) {
