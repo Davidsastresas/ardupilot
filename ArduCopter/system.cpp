@@ -232,7 +232,7 @@ void Copter::init_ardupilot()
         set_mode(Mode::Number::STABILIZE, ModeReason::UNAVAILABLE);
     } else {
         // alert pilot to mode change
-        AP_Notify::events.failsafe_mode_change = 1;
+        // AP_Notify::events.failsafe_mode_change = 1;
     }
 
     // flag that initialisation has completed
