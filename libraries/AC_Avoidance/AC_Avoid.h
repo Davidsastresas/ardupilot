@@ -109,6 +109,9 @@ public:
     // return true if limiting is active
     bool limits_active() const {return (AP_HAL::millis() - _last_limit_time) < AC_AVOID_ACTIVE_LIMIT_TIMEOUT_MS;};
 
+    // Enable or disable active proximity distance hold
+    void set_active_proximity_hold(bool state) {_active_hold = state;}
+
     static const struct AP_Param::GroupInfo var_info[];
 
 private:
@@ -204,10 +207,12 @@ private:
     AP_Int8 _behavior;          // avoidance behaviour (slide or stop)
     AP_Float _backup_speed_max; // Maximum speed that will be used to back away (in m/s)
     AP_Float _margin_roof;      // Distance (in meters) from surfaces directly in front of lidar set as TOP
+    AP_Float _advance_margin;   // Distance at wich avoid will work
 
     bool _proximity_enabled = true; // true if proximity sensor based avoidance is enabled (used to allow pilot to enable/disable)
     uint32_t _last_limit_time;      // the last time a limit was active
     uint32_t _last_log_ms;          // the last time simple avoidance was logged
+    bool _active_hold;              // true if vehicle should actively more towards an obstacle to mantain a fixed distance
 
     static AC_Avoid *_singleton;
 };
