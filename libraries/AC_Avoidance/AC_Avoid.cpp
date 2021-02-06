@@ -104,6 +104,15 @@ const AP_Param::GroupInfo AC_Avoid::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("MARGIN_RF", 7, AC_Avoid, _margin_roof, 2.0f),
 
+    // @Param: MARGIN_ADVANCE
+    // @DisplayName: Distance at wich avoid will work
+    // @Description: Vehicle wont try to mantain a distance from the wall unless its at a distance smaller than this one
+    // @Units: m
+    // @Range: 1 10
+    // @User: Standard
+    AP_GROUPINFO("ADVANCE", 8, AC_Avoid, _advance_margin, 3.0f),
+
+
     AP_GROUPEND
 };
 
@@ -530,13 +539,12 @@ void AC_Avoid::limit_velocity_3D(float kP, float accel_cmss, Vector3f &desired_v
  */
 void AC_Avoid::calc_backup_velocity_2D(float kP, float accel_cmss, Vector2f &quad1_back_vel_cms, Vector2f &quad2_back_vel_cms, Vector2f &quad3_back_vel_cms, Vector2f &quad4_back_vel_cms, float back_distance_cm, Vector2f limit_direction, float dt)
 {      
-    if (limit_direction.is_zero()) {
+    if (limit_direction.is_zero() || is_zero(back_distance_cm)) {
         // protect against divide by zero
         return; 
     }
     // speed required to move away the exact distance that we have breached the margin with 
-    const float back_speed = get_max_speed(kP, 0.4f * accel_cmss, fabsf(back_distance_cm), dt);
-    
+    const float back_speed = get_max_speed(kP, 0.4f * accel_cmss, fabsf(back_distance_cm), dt) * (is_positive(back_distance_cm) ? 1 : -0.25);
     // direction to the obstacle
     limit_direction.normalize();
 
@@ -555,10 +563,10 @@ void AC_Avoid::calc_backup_velocity_2D(float kP, float accel_cmss, Vector2f &qua
 void AC_Avoid::calc_backup_velocity_3D(float kP, float accel_cmss, Vector2f &quad1_back_vel_cms, Vector2f &quad2_back_vel_cms, Vector2f &quad3_back_vel_cms, Vector2f &quad4_back_vel_cms, float back_distance_cms, Vector3f limit_direction, float kp_z, float accel_cmss_z, float back_distance_z, float& min_z_vel, float& max_z_vel, float dt)
 {   
     // backup horizontally 
-    if (is_positive(back_distance_cms)) {
+    // if (is_positive(back_distance_cms)) { // commented out so active distance hold (go towards obstacles) is possible
         Vector2f limit_direction_2d{limit_direction.x, limit_direction.y};
         calc_backup_velocity_2D(kP, accel_cmss, quad1_back_vel_cms, quad2_back_vel_cms, quad3_back_vel_cms, quad4_back_vel_cms, back_distance_cms, limit_direction_2d, dt);
-    }
+    // }
 
     // backup vertically 
     if (!is_zero(back_distance_z)) {
@@ -1129,6 +1137,10 @@ void AC_Avoid::adjust_velocity_proximity(float kP, float accel_cmss, Vector3f &d
 
     // calc margin in cm
     const float margin_cm = MAX(_margin * 100.0f, 0.0f);
+
+    // calc advance margin in cm
+    const float advance_margin_cm = MAX(_advance_margin * 100.0f, 0.0f);
+
     Vector3f stopping_point; 
     if (!desired_vel_cms.is_zero()) {
         // only used for "stop mode". Pre-calculating the stopping point here makes sure we do not need to repeat the calculations under iterations.
@@ -1148,15 +1160,23 @@ void AC_Avoid::adjust_velocity_proximity(float kP, float accel_cmss, Vector3f &d
             continue;
         }
 
+        float back_up_dist = margin_cm - vector_to_obstacle.length();
+
         // back away if vehicle has breached margin
-        if (is_negative(dist_to_boundary - margin_cm)) {
+        // or advance if wall mode active. Hard coded deadzone of 0.5m, (25cm each way)
+        if ((is_positive(back_up_dist) || (_active_hold && (back_up_dist > (margin_cm - advance_margin_cm))) ) && (fabsf(back_up_dist) > 25.0f) ) {
             const float breach_dist = margin_cm - dist_to_boundary;
+            // gcs().send_text(MAV_SEVERITY_INFO, "breach dist: %0.2f", breach_dist);
             // add a deadzone so that the vehicle doesn't backup and go forward again and again
             // the deadzone is hardcoded to be 10cm
-            if (breach_dist > AC_AVOID_MIN_BACKUP_BREACH_DIST) {
+            if (breach_dist > AC_AVOID_MIN_BACKUP_BREACH_DIST || breach_dist < -AC_AVOID_MIN_BACKUP_BREACH_DIST) {
                 // this vector will help us decide how much we have to back away horizontally and vertically
                 const Vector3f margin_vector = vector_to_obstacle.normalized() * breach_dist;
-                const float xy_back_dist = norm(margin_vector.x, margin_vector.y);
+                float xy_back_dist = norm(margin_vector.x, margin_vector.y);
+                if (is_negative(breach_dist)) {
+                    xy_back_dist = -xy_back_dist;
+                }
+                // gcs().send_text(MAV_SEVERITY_INFO, "after normalize: %0.2f", xy_back_dist);
                 const float z_back_dist = margin_vector.z;
                 calc_backup_velocity_3D(kP, accel_cmss, quad_1_back_vel, quad_2_back_vel, quad_3_back_vel, quad_4_back_vel, xy_back_dist, vector_to_obstacle, kP_z, accel_cmss_z, z_back_dist, min_back_vel_z, max_back_vel_z, dt);
             }        
