@@ -117,6 +117,10 @@ private:
     AP_Float _vel_noise;        // velocity measurement noise in m/s
     AP_Float _pos_noise;        // position measurement noise in meters
     AP_Float _yaw_noise;        // yaw measurement noise in radians
+    
+    // thresholds for viso jump in t265 to mavlink
+    AP_Float _threshold_pos;
+    AP_Float _threshold_vel;
 
     // reference to backends
     AP_VisualOdom_Backend *_driver;
