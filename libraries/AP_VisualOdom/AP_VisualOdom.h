@@ -59,6 +59,9 @@ public:
     // return true if sensor is basically healthy (we are receiving data)
     bool healthy() const;
 
+    // return true if sensor is at confidence higher than medium
+    bool confidence_ok() const;
+
     // get user defined orientation
     enum Rotation get_orientation() const { return (enum Rotation)_orientation.get(); }
 
