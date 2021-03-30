@@ -160,6 +160,15 @@ bool AP_VisualOdom::healthy() const
     return _driver->healthy();
 }
 
+bool AP_VisualOdom::confidence_ok() const
+{
+    if (!healthy()) {
+        return false;
+    }
+
+    return _driver->confidence_ok();
+}
+
 // consume vision_position_delta mavlink messages
 void AP_VisualOdom::handle_vision_position_delta_msg(const mavlink_message_t &msg)
 {
