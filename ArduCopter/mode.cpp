@@ -183,6 +183,19 @@ Mode *Copter::mode_from_mode_num(const Mode::Number mode)
 // ACRO, STABILIZE, ALTHOLD, LAND, DRIFT and SPORT can always be set successfully but the return state of other flight modes should be checked and the caller should deal with failures appropriately
 bool Copter::set_mode(Mode::Number mode, ModeReason reason)
 {
+    if (g2.auto_mode_switch_enabled) {
+        if (mode == Mode::Number::LOITER) {
+            AP::ahrs().set_posvelyaw_source_set(0);
+            mn_auto_mode_switch = true;
+
+        } else {
+            if (reason != ModeReason::SCRIPTING) {
+                mn_auto_mode_switch = false;
+                mn_auto_mode_switch_engaged = false;
+            }
+            AP::ahrs().set_posvelyaw_source_set(1);
+        }
+    }
 
     // return immediately if we are already in the desired mode
     if (mode == control_mode) {
