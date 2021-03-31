@@ -230,6 +230,12 @@ private:
     uint32_t mn_photo_triggered_time;
     void trigger_multinnov_photo();
 
+    // Multinov global variable for auto mode switch
+    bool mn_auto_mode_switch = false;
+    bool mn_auto_mode_switch_engaged = false;
+    uint32_t mn_auto_mode_switch_time;
+    void auto_flight_mode_check_loop();
+
     // key aircraft parameters passed to multiple libraries
     AP_Vehicle::MultiCopter aparm;
 

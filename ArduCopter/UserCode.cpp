@@ -75,3 +75,53 @@ void Copter::trigger_multinnov_photo(void)
         copter.mn_photo_triggered_time = millis();
     }
 }
+
+// This function checks at 10 hz the conditions of flight mode
+// and viso status for automatic flight mode and ekf source change
+void Copter::auto_flight_mode_check_loop(void) {
+    // if not auto mode switch flag return inmediately
+    if (!copter.mn_auto_mode_switch || !copter.g2.auto_mode_switch_enabled) {
+        mn_auto_mode_switch_engaged = false;
+        return;
+    }
+
+    bool confidence_ok = copter.visual_odom.confidence_ok();
+    bool in_loiter = copter.flightmode == &copter.mode_loiter;
+    bool in_althold = copter.flightmode == &copter.mode_althold;
+
+    if (in_loiter) {
+        if (confidence_ok) {
+            mn_auto_mode_switch_engaged = false;
+            return;
+        }
+
+        if (!mn_auto_mode_switch_engaged) {
+            mn_auto_mode_switch_engaged = true;
+            mn_auto_mode_switch_time = millis();
+        }
+        
+        if (millis() - mn_auto_mode_switch_time >= copter.g2.auto_mode_switch_time_to_alt_hold) {
+            copter.set_mode(Mode::Number::ALT_HOLD, ModeReason::SCRIPTING);
+            mn_auto_mode_switch_engaged = false;
+        }  
+
+    } else if (in_althold) {
+        if (!confidence_ok) {
+            mn_auto_mode_switch_engaged = false;
+            return;
+        }
+
+        if (!mn_auto_mode_switch_engaged) {
+            mn_auto_mode_switch_engaged = true;
+            mn_auto_mode_switch_time = millis();
+        }
+        
+        if (millis() - mn_auto_mode_switch_time >= copter.g2.auto_mode_switch_time_to_loiter) {
+            copter.set_mode(Mode::Number::LOITER, ModeReason::SCRIPTING);
+            mn_auto_mode_switch_engaged = false;
+        }  
+
+    } else { // we should never be here, sanity check
+        mn_auto_mode_switch_engaged = false;
+    }
+}
