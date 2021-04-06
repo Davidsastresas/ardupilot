@@ -192,7 +192,6 @@ bool Copter::set_mode(Mode::Number mode, ModeReason reason)
 {
     if (g2.auto_mode_switch_enabled) {
         if (mode == Mode::Number::LOITER) {
-            AP::ahrs().set_posvelyaw_source_set(0);
             mn_auto_mode_switch = true;
 
         } else {
