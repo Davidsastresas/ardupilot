@@ -101,8 +101,10 @@ void Copter::auto_flight_mode_check_loop(void) {
         }
         
         if (millis() - mn_auto_mode_switch_time >= copter.g2.auto_mode_switch_time_to_alt_hold) {
-            copter.set_mode(Mode::Number::ALT_HOLD, ModeReason::SCRIPTING);
-            mn_auto_mode_switch_engaged = false;
+            if (copter.set_mode(Mode::Number::ALT_HOLD, ModeReason::SCRIPTING)) {
+                AP::ahrs().set_posvelyaw_source_set(1);
+                mn_auto_mode_switch_engaged = false;
+            }
         }  
 
     } else if (in_althold) {
@@ -117,8 +119,10 @@ void Copter::auto_flight_mode_check_loop(void) {
         }
         
         if (millis() - mn_auto_mode_switch_time >= copter.g2.auto_mode_switch_time_to_loiter) {
-            copter.set_mode(Mode::Number::LOITER, ModeReason::SCRIPTING);
-            mn_auto_mode_switch_engaged = false;
+            if (copter.set_mode(Mode::Number::LOITER, ModeReason::SCRIPTING)) {
+                AP::ahrs().set_posvelyaw_source_set(0);
+                mn_auto_mode_switch_engaged = false;
+            }
         }  
 
     } else { // we should never be here, sanity check
