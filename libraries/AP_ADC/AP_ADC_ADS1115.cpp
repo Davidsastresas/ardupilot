@@ -1,6 +1,7 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_HAL/utility/sparse-endian.h>
 #include <AP_Param/AP_Param.h>
+#include <AP_Logger/AP_Logger.h>
 
 #include "AP_ADC_ADS1115.h"
 
@@ -269,6 +270,9 @@ void AP_ADC_ADS1115::_update()
     /* select next channel */
     _channel_to_read = (_channel_to_read + 1) % _channels_number;
     _start_conversion(_channel_to_read);
+
+    // logging
+    write_logs();
 }
 
 void AP_ADC_ADS1115::send_mavlink_message_adc_arys(const mavlink_channel_t chan) {
@@ -283,4 +287,14 @@ void AP_ADC_ADS1115::send_mavlink_message_adc_arys(const mavlink_channel_t chan)
         _samples[2].data,
         _samples[3].data
     );
+}
+
+void AP_ADC_ADS1115::write_logs(void) {
+
+    AP::logger().Write("AADC", "TimeUS, Sample0, Sample1, Sample2, Sample3", "Qffff",
+                                           AP_HAL::micros64(),
+                                           _samples[0],
+                                           _samples[1],
+                                           _samples[2],
+                                           _samples[3]);
 }

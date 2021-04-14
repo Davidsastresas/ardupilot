@@ -61,6 +61,8 @@ private:
 
     void calc_fuel_consumption();
 
+    void write_logs();
+
     // This is the response as per the documentation, first 112 bits of table 1.1
     struct PACKED ECU_telemetry_a {
         // variable                index  Description                                                              size  sign

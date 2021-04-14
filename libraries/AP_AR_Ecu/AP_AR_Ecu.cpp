@@ -2,6 +2,7 @@
 #include <AP_Param/AP_Param.h>
 #include <AP_SerialManager/AP_SerialManager.h>
 #include <AP_HAL/utility/sparse-endian.h>
+#include <AP_Logger/AP_Logger.h>
 
 extern const AP_HAL::HAL& hal;
 
@@ -69,6 +70,9 @@ void AP_AR_Ecu::update(void) {
 
     // calculate composed fuel consumption stuff
     calc_fuel_consumption();
+
+    // log current values
+    write_logs();
 
     // send request data command. It is 'a' 0x00 0x06
     send_command(CMD_READ_DATA);
@@ -171,4 +175,19 @@ namespace AP {
 AP_AR_Ecu *ar_ecu() {
         return AP_AR_Ecu::get_singleton();
     }
+}
+
+void AP_AR_Ecu::write_logs(void) {
+
+    AP::logger().Write("AECU", "TimeUS,CoolTmp,Rpm,Baro,Tps,BattVolt,FInst,FCons,FRem,PlsWdth", "QhHhhhfffH",
+                                           AP_HAL::micros64(),
+                                           _coolant,
+                                           _rpm,
+                                           _barometer,
+                                           _tps,
+                                           _batteryVoltage,
+                                           _fuel_instant,
+                                           _fuel_consumed,
+                                           _fuel_remaining,
+                                           _pulseWidth1);
 }

@@ -46,6 +46,7 @@ private:
 
     void _update();
     bool _start_conversion(uint8_t channel);
+    void write_logs();
 
     float _convert_register_data_to_mv(int16_t word) const;
 };
