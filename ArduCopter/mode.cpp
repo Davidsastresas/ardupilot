@@ -193,11 +193,13 @@ bool Copter::set_mode(Mode::Number mode, ModeReason reason)
     if (g2.auto_mode_switch_enabled) {
         if (mode == Mode::Number::LOITER) {
             mn_auto_mode_switch = true;
+            copter.visual_odom.set_feed_Ekf(true); // Workaround for the EKF bug that consumes t265 z even if source is not == 6
 
         } else {
             if (reason != ModeReason::SCRIPTING) {
                 mn_auto_mode_switch = false;
                 mn_auto_mode_switch_engaged = false;
+                copter.visual_odom.set_feed_Ekf(false); // Workaround for the EKF bug that consumes t265 z even if source is not == 6
             }
             AP::ahrs().set_posvelyaw_source_set(1);
         }
