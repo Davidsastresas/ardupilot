@@ -95,4 +95,9 @@ bool AP_VisualOdom_Backend::confidence_ok()
     return _confidence_ok;
 }
 
+void AP_VisualOdom_Backend::set_feed_Ekf(bool set)
+{
+    _feed_ekf = set;
+}
+
 #endif

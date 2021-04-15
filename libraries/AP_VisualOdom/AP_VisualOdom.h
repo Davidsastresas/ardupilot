@@ -62,6 +62,9 @@ public:
     // return true if sensor is at confidence higher than medium
     bool confidence_ok() const;
 
+    // disable feeding viso info to EKF, workaround until EKF bug consuming Z data even if sources are other than 6 is solved
+    void set_feed_Ekf(bool set) const;
+
     // get user defined orientation
     enum Rotation get_orientation() const { return (enum Rotation)_orientation.get(); }
 

@@ -48,6 +48,9 @@ public:
     // return true if confidence is higher than medium
     virtual bool confidence_ok();
 
+    // disable feeding viso info to EKF, workaround until EKF bug consuming Z data even if sources are other than 6 is solved
+    virtual void set_feed_Ekf(bool set);
+
 protected:
 
     // returns the system time of the last reset if reset_counter has not changed
@@ -62,6 +65,7 @@ protected:
     uint32_t _reset_timestamp_ms;   // time reset counter was received
 
     bool _confidence_ok = false;    // confidence higher than medium
+    bool _feed_ekf = true;
 };
 
 #endif

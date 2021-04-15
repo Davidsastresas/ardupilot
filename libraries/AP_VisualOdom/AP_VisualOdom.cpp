@@ -166,7 +166,23 @@ bool AP_VisualOdom::confidence_ok() const
         return false;
     }
 
-    return _driver->confidence_ok();
+    if (_driver != nullptr) {
+        return _driver->confidence_ok();
+    }
+    
+    return false;
+}
+
+void AP_VisualOdom::set_feed_Ekf(bool set) const
+{
+    // exit immediately if not enabled
+    if (!enabled()) {
+        return;
+    }
+
+    if (_driver != nullptr) {
+        _driver->set_feed_Ekf(set);
+    }
 }
 
 // consume vision_position_delta mavlink messages
