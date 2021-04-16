@@ -195,6 +195,7 @@ public:
         PROXIMITY_AUTO_YAW =  94, // enable or disable automatic yawing to face closest obstacle
         PROX_DIST_HOLD  =     95, // enable / disable proximity distance hold
         TAKE_PHOTO =          96, // Take single photo using Multinnovs PCB and PWM assigned values
+        VTX_POWER =           97, // VTX power level
 
         // entries from 100 onwards are expected to be developer
         // options used for testing
