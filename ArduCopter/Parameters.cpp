@@ -1055,7 +1055,8 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Bitmask: 0:Disable thrust loss check, 1:Disable yaw imbalance warning
     // @User: Advanced
     AP_GROUPINFO("FLIGHT_OPTIONS", 44, ParametersG2, flight_options, 0),
-#if PROXIMITY_ENABLED == ENABLED
+    
+#if HAL_PROXIMITY_ENABLED == ENABLED
     // @Param: AUTOYAW_MIN_DIST
     // @DisplayName: Proximity auto yaw distance
     // @Description: If a object is closer than this distace the vehicle will yaw to face it, 0 is disable

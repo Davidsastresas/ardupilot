@@ -866,7 +866,7 @@ uint16_t Mode::get_pilot_speed_dn()
 
 void Mode::input_euler_angle_roll_pitch_proximity_yaw(float euler_roll_angle_cd, float euler_pitch_angle_cd, float euler_yaw_rate_cds)
 {
-#if PROXIMITY_ENABLED == ENABLED
+#if HAL_PROXIMITY_ENABLED == ENABLED
     // Proximity based automatic yawing if no pilot input
     if (is_zero(euler_yaw_rate_cds) && copter.auto_yaw_enabled && is_positive(copter.g2.auto_yaw_min_dist)) {
         float angle, distance;

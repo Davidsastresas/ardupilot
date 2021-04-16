@@ -583,7 +583,7 @@ bool RC_Channel_Copter::do_aux_function(const aux_func_t ch_option, const AuxSwi
             break;
 
         case AUX_FUNC::PROXIMITY_AUTO_YAW: {
-#if PROXIMITY_ENABLED == ENABLED
+#if HAL_PROXIMITY_ENABLED == ENABLED
             if (copter.g2.proximity.sensor_enabled()) {
                 switch (ch_flag) {
                 case AuxSwitchPos::HIGH:
