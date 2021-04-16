@@ -102,7 +102,7 @@ const AP_Param::GroupInfo AC_Avoid::var_info[] = {
     // @Units: m
     // @Range: 1 10
     // @User: Standard
-    AP_GROUPINFO("MARGIN_RF", 7, AC_Avoid, _margin_roof, 2.0f),
+    AP_GROUPINFO("MARGIN_RF", 9, AC_Avoid, _margin_roof, 2.0f),
 
     // @Param: MARGIN_ADVANCE
     // @DisplayName: Distance at wich avoid will work
@@ -110,7 +110,7 @@ const AP_Param::GroupInfo AC_Avoid::var_info[] = {
     // @Units: m
     // @Range: 1 10
     // @User: Standard
-    AP_GROUPINFO("ADVANCE", 8, AC_Avoid, _advance_margin, 3.0f),
+    AP_GROUPINFO("ADVANCE", 10, AC_Avoid, _advance_margin, 3.0f),
 
 
     AP_GROUPEND
