@@ -1334,11 +1334,11 @@ float AC_Avoid::get_stopping_distance(float kP, float accel_cmss, float speed_cm
 float AC_Avoid::distance_to_lean_pct(float dist_m)
 {
     // ignore objects beyond DIST_MAX
-    if (dist_m < 0.0f || dist_m >= _dist_max || _dist_max <= 0.0f) {
+    if (dist_m < 0.0f || dist_m >= _margin || _margin <= 0.0f) {
         return 0.0f;
     }
     // inverted but linear response
-    return 1.0f - (dist_m / _dist_max);
+    return 1.0f - (dist_m / _margin);
 }
 
 // returns the maximum positive and negative roll and pitch percentages (in -1 ~ +1 range) based on the proximity sensor
@@ -1366,7 +1366,7 @@ void AC_Avoid::get_proximity_roll_pitch_pct(float &roll_positive, float &roll_ne
     for (uint8_t i=0; i<obj_count; i++) {
         float ang_deg, dist_m;
         if (_proximity.get_object_angle_and_distance(i, ang_deg, dist_m)) {
-            if (dist_m < _dist_max) {
+            if (dist_m < _margin) {
                 // convert distance to lean angle (in 0 to 1 range)
                 const float lean_pct = distance_to_lean_pct(dist_m);
                 // convert angle to roll and pitch lean percentages
