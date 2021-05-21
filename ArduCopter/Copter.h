@@ -189,6 +189,8 @@
 #include <SITL/SITL.h>
 #endif
 
+#include <AC_Arys_Failsafe/AC_Arys_Failsafe.h>
+
 #include "mode.h"
 
 class Copter : public AP_Vehicle {
@@ -562,6 +564,8 @@ private:
     // avoidance of adsb enabled vehicles (normally manned vehicles)
     AP_Avoidance_Copter avoidance_adsb{adsb};
 #endif
+
+    AC_Arys_Failsafe arys_failsafe;
 
     // last valid RC input time
     uint32_t last_radio_update_ms;
