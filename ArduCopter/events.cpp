@@ -14,6 +14,9 @@ void Copter::failsafe_radio_on_event()
 {
     AP::logger().Write_Error(LogErrorSubsystem::FAILSAFE_RADIO, LogErrorCode::FAILSAFE_OCCURRED);
 
+    // Save coordinates for Arys custom return to mission
+    save_failsafe_coordinates();
+    
     // set desired action based on FS_THR_ENABLE parameter
     Failsafe_Action desired_action;
     switch (g.failsafe_throttle) {
@@ -88,6 +91,9 @@ void Copter::handle_battery_failsafe(const char *type_str, const int8_t action)
 
     Failsafe_Action desired_action = (Failsafe_Action)action;
 
+    // Save coordinates for Arys custom return to mission
+    save_failsafe_coordinates();
+    
     // Conditions to deviate from BATT_FS_XXX_ACT parameter setting
     if (should_disarm_on_failsafe()) {
         // should immediately disarm when we're on the ground
@@ -144,6 +150,9 @@ void Copter::failsafe_gcs_on_event(void)
 {
     AP::logger().Write_Error(LogErrorSubsystem::FAILSAFE_GCS, LogErrorCode::FAILSAFE_OCCURRED);
     RC_Channels::clear_overrides();
+
+    // Save coordinates for Arys custom return to mission
+    save_failsafe_coordinates();
 
     // convert the desired failsafe response to the Failsafe_Action enum
     Failsafe_Action desired_action;
@@ -270,6 +279,9 @@ void Copter::failsafe_terrain_on_event()
         mode_rtl.restart_without_terrain();
 #endif
     } else {
+        // Save coordinates for Arys custom return to mission
+        save_failsafe_coordinates();
+
         set_mode_RTL_or_land_with_pause(ModeReason::TERRAIN_FAILSAFE);
     }
 }
@@ -385,3 +397,23 @@ void Copter::do_failsafe_action(Failsafe_Action action, ModeReason reason){
     }
 }
 
+void Copter::save_failsafe_coordinates()
+{
+    int32_t latitude; 
+    int32_t longitude;
+    int32_t altitude;
+    int8_t  sprayerstatus = 0;
+
+    latitude = current_loc.lat;
+    longitude = current_loc.lng;
+    
+    AP_Mission::Mission_Command fs_cmd = mode_auto.mission.get_current_nav_cmd();
+    altitude = fs_cmd.content.location.alt;
+    
+    if (sprayer.spraying()) {
+        sprayerstatus = 1;
+    }
+    
+    arys_failsafe.save_failsafe_status(latitude, longitude, altitude, sprayerstatus);
+    arys_failsafe.log_failsafe_status();
+}

@@ -141,6 +141,9 @@ void Copter::failsafe_ekf_event()
         return;
     }
 
+    // Save coordinates for Arys custom return to mission
+    save_failsafe_coordinates();
+
     // EKF failsafe event has occurred
     failsafe.ekf = true;
     AP::logger().Write_Error(LogErrorSubsystem::FAILSAFE_EKFINAV, LogErrorCode::FAILSAFE_OCCURRED);

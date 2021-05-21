@@ -744,6 +744,7 @@ private:
     void set_mode_SmartRTL_or_land_with_pause(ModeReason reason);
     bool should_disarm_on_failsafe();
     void do_failsafe_action(Failsafe_Action action, ModeReason reason);
+    void save_failsafe_coordinates(void);
 
     // failsafe.cpp
     void failsafe_enable();

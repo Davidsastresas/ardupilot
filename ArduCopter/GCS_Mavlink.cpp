@@ -860,6 +860,11 @@ MAV_RESULT GCS_MAVLINK_Copter::handle_command_long_packet(const mavlink_command_
         return MAV_RESULT_ACCEPTED;
     }
 
+    case MAV_CMD_USER_1:
+    {
+        return copter.arys_failsafe.handle_send_fs_coords_to_gcs();
+    }
+
     default:
         return GCS_MAVLINK::handle_command_long_packet(packet);
     }
