@@ -554,7 +554,7 @@ const AP_Param::Info Copter::var_info[] = {
     GOBJECT(camera_mount,           "MNT",  AP_Mount),
 #endif
 
-    GOBJECT(arys_failsafe,          "AR_FS_",  AC_Arys_Failsafe),
+    GOBJECT(arys_failsafe,          "ARFS",  AC_Arys_Failsafe),
 
     // @Group: LOG
     // @Path: ../libraries/AP_Logger/AP_Logger.cpp
