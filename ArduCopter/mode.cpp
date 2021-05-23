@@ -192,6 +192,14 @@ bool Copter::set_mode(Mode::Number mode, ModeReason reason)
         return true;
     }
 
+    if (arys_failsafe.save_coords_on_rtl_and_land()) {
+        if (control_mode == Mode::Number::AUTO) {
+            if ((mode == Mode::Number::RTL) || (mode == Mode::Number::LAND)) {
+                save_failsafe_coordinates();
+            }    
+        }
+    }
+
     Mode *new_flightmode = mode_from_mode_num((Mode::Number)mode);
     if (new_flightmode == nullptr) {
         gcs().send_text(MAV_SEVERITY_WARNING,"No such mode");

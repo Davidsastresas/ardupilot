@@ -20,6 +20,8 @@ public:
 
     void log_failsafe_status();
 
+    bool save_coords_on_rtl_and_land() { return _failsafe_save_rtl_land; }
+
     // parameter var table
     static const struct AP_Param::GroupInfo var_info[];
 
@@ -31,4 +33,5 @@ private:
     AP_Int32 _failsafe_altitude;
     AP_Int32 _failsafe_sprayer_status;
     AP_Int8  _failsafe_int_point_enabled;
+    AP_Int8  _failsafe_save_rtl_land;
 };

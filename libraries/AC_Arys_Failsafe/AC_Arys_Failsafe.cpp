@@ -16,6 +16,8 @@ const AP_Param::GroupInfo AC_Arys_Failsafe::var_info[] = {
 
     AP_GROUPINFO("ENA", 4, AC_Arys_Failsafe, _failsafe_int_point_enabled, 0),
 
+    AP_GROUPINFO("EN_RTL_LAND", 5, AC_Arys_Failsafe, _failsafe_save_rtl_land, 0),
+
     AP_GROUPEND
 };
 
