@@ -427,6 +427,10 @@ public:
 
     // Rover options
     AP_Int32 manual_options;
+    
+    // pilot inputs expo
+    AP_Float thr_expo;
+    AP_Float str_expo;
 };
 
 extern const AP_Param::Info var_info[];

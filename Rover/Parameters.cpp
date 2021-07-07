@@ -670,10 +670,20 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @User: Advanced
     AP_GROUPINFO("MANUAL_OPTIONS", 53, ParametersG2, manual_options, 0),
 
+    // @Param: THROTTLE_EXPO
+    // @DisplayName: Pilot throttle expo
+    // @Range: -0.5 1.0
+    AP_GROUPINFO("THROTTLE_EXPO", 54, ParametersG2, thr_expo, 0),
+
+    // @Param: STEERING_EXPO
+    // @DisplayName: Pilot steering expo
+    // @Range: -0.5 1.0
+    AP_GROUPINFO("STEERING_EXPO", 55, ParametersG2, str_expo, 0),
+
 #if MODE_DOCK_ENABLED == ENABLED
     // @Group: DOCK
     // @Path: mode_dock.cpp
-    AP_SUBGROUPPTR(mode_dock_ptr, "DOCK", 54, ParametersG2, ModeDock),
+    AP_SUBGROUPPTR(mode_dock_ptr, "DOCK", 56, ParametersG2, ModeDock),
 #endif
 
     AP_GROUPEND
