@@ -363,6 +363,7 @@ struct PACKED log_MAVLink_Command {
     uint8_t source_component;
     uint8_t frame;
     uint16_t command;
+    uint8_t autocontinue;
     float param1;
     float param2;
     float param3;
@@ -371,6 +372,7 @@ struct PACKED log_MAVLink_Command {
     int32_t y;
     float z;
     uint8_t result;
+    uint8_t channel;
     bool was_command_long;
 };
 
@@ -883,6 +885,7 @@ struct PACKED log_VER {
 // @Field: SC: target component for command
 // @Field: Fr: command frame
 // @Field: Cmd: mavlink command enum value
+// @Field: AC: autocontinue flag from mavlink packet
 // @Field: P1: first parameter from mavlink packet
 // @Field: P2: second parameter from mavlink packet
 // @Field: P3: third parameter from mavlink packet
@@ -891,6 +894,7 @@ struct PACKED log_VER {
 // @Field: Y: Y coordinate from mavlink packet
 // @Field: Z: Z coordinate from mavlink packet
 // @Field: Res: command result being returned from autopilot
+// @Field: Chan: the channel the command was received on, -1 for scripting
 // @Field: WL: true if this command arrived via a COMMAND_LONG rather than COMMAND_INT
 
 // @LoggerMessage: MODE
@@ -1243,7 +1247,7 @@ LOG_STRUCTURE_FROM_PRECLAND \
     { LOG_CMD_MSG, sizeof(log_Cmd), \
       "CMD", "QHHHffffLLfB","TimeUS,CTot,CNum,CId,Prm1,Prm2,Prm3,Prm4,Lat,Lng,Alt,Frame", "s-------DUm-", "F-------GG0-" }, \
     { LOG_MAVLINK_COMMAND_MSG, sizeof(log_MAVLink_Command), \
-      "MAVC", "QBBBBBHffffiifBB","TimeUS,TS,TC,SS,SC,Fr,Cmd,P1,P2,P3,P4,X,Y,Z,Res,WL", "s---------------", "F---------------" }, \
+      "MAVC", "QBBBBBHBffffiifBBB","TimeUS,TS,TC,SS,SC,Fr,Cmd,AC,P1,P2,P3,P4,X,Y,Z,Res,Chan,WL", "s---------------", "F---------------" }, \
     { LOG_RADIO_MSG, sizeof(log_Radio), \
       "RAD", "QBBBBBHH", "TimeUS,RSSI,RemRSSI,TxBuf,Noise,RemNoise,RxErrors,Fixed", "s-------", "F-------", true }, \
 LOG_STRUCTURE_FROM_CAMERA \

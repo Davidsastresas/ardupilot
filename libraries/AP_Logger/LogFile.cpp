@@ -268,6 +268,7 @@ void AP_Logger::Write_Command(const mavlink_command_int_t &packet,
                               uint8_t source_system,
                               uint8_t source_component,
                               const MAV_RESULT result,
+                              const uint8_t chan, 
                               bool was_command_long)
 {
     const struct log_MAVLink_Command pkt{
@@ -279,6 +280,7 @@ void AP_Logger::Write_Command(const mavlink_command_int_t &packet,
         source_component: source_component,
         frame           : packet.frame,
         command         : packet.command,
+        autocontinue    : packet.autocontinue,
         param1          : packet.param1,
         param2          : packet.param2,
         param3          : packet.param3,
@@ -287,6 +289,7 @@ void AP_Logger::Write_Command(const mavlink_command_int_t &packet,
         y               : packet.y,
         z               : packet.z,
         result          : (uint8_t)result,
+        channel         : chan,
         was_command_long:was_command_long,
     };
     return WriteBlock(&pkt, sizeof(pkt));

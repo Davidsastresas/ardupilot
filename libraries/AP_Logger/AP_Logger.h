@@ -317,6 +317,7 @@ public:
                        uint8_t source_system,
                        uint8_t source_component,
                        MAV_RESULT result,
+                       const uint8_t chan,
                        bool was_command_long=false);
     void Write_Mission_Cmd(const AP_Mission &mission,
                                const AP_Mission::Mission_Command &cmd);
