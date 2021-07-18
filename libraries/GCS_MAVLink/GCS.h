@@ -141,6 +141,7 @@ private:
 ///
 class GCS_MAVLINK
 {
+friend class AP_Vehicle;
 public:
     friend class GCS;
 
