@@ -23,6 +23,7 @@
 #include <AP_Filesystem/AP_Filesystem.h>
 #include <AP_HAL/I2CDevice.h>
 #include "AP_Scripting_CANSensor.h"
+#include "AP_Scripting_MAVLink_buffer.h"
 
 #ifndef SCRIPTING_MAX_NUM_I2C_DEVICE
   #define SCRIPTING_MAX_NUM_I2C_DEVICE 4
@@ -51,6 +52,9 @@ public:
     void handle_mission_command(const class AP_Mission::Mission_Command& cmd);
 
     bool arming_checks(size_t buflen, char *buffer) const;
+
+    bool handle_command_long(const mavlink_command_long_t& cmd, const mavlink_channel_t chan);
+    bool handle_command_int(const mavlink_command_int_t& cmd, const mavlink_channel_t chan);
 
    // User parameters for inputs into scripts 
    AP_Float _user[6];
@@ -87,6 +91,12 @@ public:
         uint32_t time_ms;
     };
     ObjectBuffer<struct scripting_mission_cmd> * mission_data;
+
+    struct mavlink {
+        command_long_buffer * long_buffer;
+        command_int_buffer * int_buffer;
+        HAL_Semaphore sem;
+    } mavlink_data;
 
 private:
 

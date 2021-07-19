@@ -321,6 +321,26 @@ bool AP_Scripting::arming_checks(size_t buflen, char *buffer) const
     return true;
 }
 
+bool AP_Scripting::handle_command_long(const mavlink_command_long_t& cmd, const mavlink_channel_t chan)
+{
+    if (!_enable || mavlink_data.long_buffer == nullptr) {
+        // not enabled, buffer not created
+        return false;
+    }
+    WITH_SEMAPHORE(mavlink_data.sem);
+    return mavlink_data.long_buffer->write(cmd, chan);
+}
+
+bool AP_Scripting::handle_command_int(const mavlink_command_int_t& cmd, const mavlink_channel_t chan)
+{
+    if (!_enable || mavlink_data.int_buffer == nullptr) {
+        // not enabled or buffer not created
+        return false;
+    }
+    WITH_SEMAPHORE(mavlink_data.sem);
+    return mavlink_data.int_buffer->write(cmd, chan);
+}
+
 AP_Scripting *AP_Scripting::_singleton = nullptr;
 
 namespace AP {
