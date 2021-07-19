@@ -10,6 +10,8 @@
 #include <AP_Scripting/AP_Scripting.h>
 #include <string.h>
 
+#include "AP_Scripting_MAVLink_buffer.h"
+
 extern const AP_HAL::HAL& hal;
 
 // millis
