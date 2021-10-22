@@ -169,10 +169,10 @@ void ModeLoiter::run()
         loiter_nav->update();
 
         // call attitude controller
-        attitude_control->input_thrust_vector_rate_heading(loiter_nav->get_thrust_vector(), target_yaw_rate);
+        input_thrust_vector_proximity_yaw(loiter_nav->get_thrust_vector(), target_yaw_rate);
 
         // get avoidance adjusted climb rate
-        // target_climb_rate = get_avoidance_adjusted_climbrate(target_climb_rate);
+        target_climb_rate = get_avoidance_adjusted_climbrate(target_climb_rate);
 
         // update the vertical offset based on the surface measurement
         copter.surface_tracking.update_surface_offset();
