@@ -1124,6 +1124,8 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @Range: 0 120
     // @User: Standard
     AP_GROUPINFO("FS_DR_TIMEOUT", 53, ParametersG2, failsafe_dr_timeout, 30),
+    
+    AP_GROUPINFO("CSTM_MODE_OPT", 54, ParametersG2, nv_custom_flight_mode_opt, 0),
 
     AP_GROUPEND
 };
