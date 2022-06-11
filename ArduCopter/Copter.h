@@ -737,6 +737,7 @@ private:
     void failsafe_radio_off_event();
     void handle_battery_failsafe(const char* type_str, const int8_t action);
     void failsafe_gcs_check();
+    void handle_failsafe_companion_computer(const mavlink_command_long_t &packet);
     void failsafe_gcs_on_event(void);
     void failsafe_gcs_off_event(void);
     void failsafe_terrain_check();

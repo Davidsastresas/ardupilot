@@ -119,6 +119,15 @@ void Copter::handle_battery_failsafe(const char *type_str, const int8_t action)
 
 }
 
+void Copter::handle_failsafe_companion_computer(const mavlink_command_long_t &packet) 
+{
+    AP::logger().Write_Error(LogErrorSubsystem::FAILSAFE_COMPANION_COMPUTER, LogErrorCode::FAILSAFE_OCCURRED);
+
+    FailsafeAction desired_action = (FailsafeAction)packet.param1;
+
+    do_failsafe_action(desired_action, ModeReason::COMPANION_COMPUTER_FAILSAFE);
+}
+
 // failsafe_gcs_check - check for ground station failsafe
 void Copter::failsafe_gcs_check()
 {
