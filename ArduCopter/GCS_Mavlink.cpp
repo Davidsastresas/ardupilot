@@ -1003,6 +1003,12 @@ MAV_RESULT GCS_MAVLINK_Copter::handle_command_long_packet(const mavlink_command_
         copter.handle_failsafe_companion_computer(packet);
         return MAV_RESULT_ACCEPTED;
     }
+    // We use this to indicate the custom waypoint has finished
+    case MAV_CMD_USER_4: {
+        gcs().send_text(MAV_SEVERITY_INFO, "cmd waypoint 4: companion computer returned control");
+        copter.mode_auto.handle_cmd_user_4(packet);
+        return MAV_RESULT_ACCEPTED;
+    }
     default:
         return GCS_MAVLINK::handle_command_long_packet(packet);
     }

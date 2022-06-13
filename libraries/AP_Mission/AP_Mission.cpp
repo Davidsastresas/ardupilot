@@ -411,7 +411,8 @@ bool AP_Mission::is_nav_cmd(const Mission_Command& cmd)
     return (cmd.id <= MAV_CMD_NAV_LAST ||
             cmd.id == MAV_CMD_NAV_SET_YAW_SPEED ||
             cmd.id == MAV_CMD_NAV_SCRIPT_TIME ||
-            cmd.id == MAV_CMD_NAV_ATTITUDE_TIME);
+            cmd.id == MAV_CMD_NAV_ATTITUDE_TIME) ||
+            cmd.id == MAV_CMD_WAYPOINT_USER_4; // VERY IMPORTANT TO ADD THE COMMAND HERE! Otherwise it will verify it instantly
 }
 
 /// get_next_nav_cmd - gets next "navigation" command found at or after start_index
@@ -1200,6 +1201,13 @@ MAV_MISSION_RESULT AP_Mission::mavlink_int_to_mission_cmd(const mavlink_mission_
 
     case MAV_CMD_DO_PAUSE_CONTINUE:
         cmd.p1 = packet.param1;
+        break;
+
+    case MAV_CMD_WAYPOINT_USER_4:
+        cmd.content.cmduser4.p1 = packet.param1;
+        cmd.content.cmduser4.p2 = packet.param2;
+        cmd.content.cmduser4.p3 = packet.param3;
+        cmd.content.cmduser4.p4 = packet.param4;
         break;
         
     default:
@@ -2402,6 +2410,8 @@ const char *AP_Mission::Mission_Command::type() const
         return "NavAttitudeTime";
     case MAV_CMD_DO_PAUSE_CONTINUE:
         return "PauseContinue";
+    case MAV_CMD_WAYPOINT_USER_4:
+        return "CmdWaypointUser4";
 
     default:
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL

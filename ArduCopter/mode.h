@@ -115,6 +115,9 @@ public:
     virtual bool pause() { return false; };
     virtual bool resume() { return false; };
 
+    // custom methods for auto mode to receive commands during missions from the companion computer
+    virtual bool handle_cmd_user_4(const mavlink_command_long_t &packet) { return false; };
+
 protected:
 
     // helper functions
@@ -460,6 +463,9 @@ public:
     // lua accessors for nav script time support
     bool nav_script_time(uint16_t &id, uint8_t &cmd, float &arg1, float &arg2);
     void nav_script_time_done(uint16_t id);
+    
+    // custom methods for auto mode to receive commands during missions from the companion computer
+    bool handle_cmd_user_4(const mavlink_command_long_t &packet) override;
 
     AP_Mission mission{
         FUNCTOR_BIND_MEMBER(&ModeAuto::start_command, bool, const AP_Mission::Mission_Command &),
@@ -549,6 +555,9 @@ private:
     void do_nav_script_time(const AP_Mission::Mission_Command& cmd);
 #endif
     void do_nav_attitude_time(const AP_Mission::Mission_Command& cmd);
+    
+    void do_waypoint_user_4(const AP_Mission::Mission_Command& cmd);
+    bool _waypoint_user_4_active = false;
 
     bool verify_takeoff();
     bool verify_land();
@@ -571,6 +580,9 @@ private:
     bool verify_nav_script_time();
 #endif
     bool verify_nav_attitude_time(const AP_Mission::Mission_Command& cmd);
+
+    bool verify_nav_cmd_waypoint_user_4(const AP_Mission::Mission_Command& cmd);
+    bool _current_waypoint_user_4_verified = false;
 
     // Loiter control
     uint16_t loiter_time_max;                // How long we should stay in Loiter Mode for mission scripting (time in seconds)

@@ -38,6 +38,12 @@ bool ModeAuto::init(bool ignore_checks)
             auto_yaw.set_mode(AUTO_YAW_HOLD);
         }
 
+        // reset custom waypoint flags, they will be enabled again
+        // when the command is reached in the mission, in case this 
+        // was the current waypoint
+        _waypoint_user_4_active = false;
+        _current_waypoint_user_4_verified = false;
+
         // initialise waypoint and spline controller
         wp_nav->wp_and_spline_init();
 
@@ -700,6 +706,11 @@ bool ModeAuto::start_command(const AP_Mission::Mission_Command& cmd)
     case MAV_CMD_DO_LAND_START:
         break;
 
+    case MAV_CMD_WAYPOINT_USER_4:
+        gcs().send_text(MAV_SEVERITY_INFO, "waypoint user 4");
+        do_waypoint_user_4(cmd);
+        break;
+
     default:
         // unable to use the command, allow the vehicle to try the next command
         return false;
@@ -903,6 +914,10 @@ bool ModeAuto::verify_command(const AP_Mission::Mission_Command& cmd)
     case MAV_CMD_DO_WINCH:
     case MAV_CMD_DO_LAND_START:
         cmd_complete = true;
+        break;
+
+    case MAV_CMD_WAYPOINT_USER_4:
+        cmd_complete = verify_nav_cmd_waypoint_user_4(cmd);
         break;
 
     default:
@@ -2141,10 +2156,15 @@ bool ModeAuto::verify_nav_guided_enable(const AP_Mission::Mission_Command& cmd)
 {
     // if disabling guided mode then immediately return true so we move to next command
     if (cmd.p1 == 0) {
+        gcs().send_text(MAV_SEVERITY_INFO, "Reached command #%i, implicit true",cmd.index);
         return true;
     }
 
     // check time and position limits
+    if (copter.mode_guided.limit_check()) {
+        gcs().send_text(MAV_SEVERITY_INFO, "Reached command #%i",cmd.index);
+    }
+    gcs().send_text(MAV_SEVERITY_INFO, "Reached command #%i %d",cmd.index, copter.mode_guided.limit_check());
     return copter.mode_guided.limit_check();
 }
 #endif  // NAV_GUIDED
@@ -2201,6 +2221,54 @@ bool ModeAuto::resume()
 
     wp_nav->set_resume();
     return true;
+}
+
+// We receive a cmd user 4 to indicate the autopilot the companion computer procedure has finished
+bool ModeAuto::handle_cmd_user_4(const mavlink_command_long_t &packet) 
+{
+    if (!_waypoint_user_4_active) {
+        return false;
+    }
+
+    if (packet.param1 > 0.0f) {
+        // gcs().send_text(MAV_SEVERITY_INFO, "cmd waypoint 4: companion computer returned control");
+        _current_waypoint_user_4_verified = true;
+        return true;
+    }
+    
+    return false;
+}
+
+void ModeAuto::do_waypoint_user_4(const AP_Mission::Mission_Command& cmd) 
+{
+    // Activate flag indicating this waypoint type is active
+    _waypoint_user_4_active = true;
+    
+    // Send a named float message to the companion computer with the p1 field
+    // in the mission command, which will be the pressure at which the vehicle
+    // stops climbing
+    gcs().send_named_float("CMD4", cmd.content.cmduser4.p1);
+
+    // Start guided navigation
+    nav_guided_start();
+}
+
+
+bool ModeAuto::verify_nav_cmd_waypoint_user_4(const AP_Mission::Mission_Command& cmd)
+{
+    bool commandFinished = _current_waypoint_user_4_verified;
+    
+    if (commandFinished) {
+        // reset flag directly, it is already consumed
+        _current_waypoint_user_4_verified = false;
+        // we are moving towards next waypoint, so this is not active anymore
+        _waypoint_user_4_active = false;
+        // verify to pass to next waypoint
+        // gcs().send_text(MAV_SEVERITY_INFO, "cmd user 4 finished, returning control to autopilot");
+        return true;
+    }
+
+    return false;
 }
 
 #endif

@@ -239,6 +239,13 @@ public:
         float climb_rate;
     };
 
+    struct PACKED Cmd_user_4 {
+        float p1;
+        float p2;
+        float p3;
+        float p4;
+    };
+
     union Content {
         // jump structure
         Jump_Command jump;
@@ -317,6 +324,9 @@ public:
 
         // location
         Location location{};      // Waypoint location
+
+        // Cmd_user_4
+        Cmd_user_4 cmduser4;
     };
 
     // command structure
