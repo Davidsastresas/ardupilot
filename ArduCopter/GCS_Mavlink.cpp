@@ -1112,7 +1112,7 @@ void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
         break;
     }
 
-#if MODE_GUIDED_ENABLED == ENABLED
+#if MODE_CUSTOM_ENABLED == ENABLED
     case MAVLINK_MSG_ID_SET_ATTITUDE_TARGET:   // MAV ID: 82
     {
         // decode packet
@@ -1120,7 +1120,7 @@ void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
         mavlink_msg_set_attitude_target_decode(&msg, &packet);
 
         // exit if vehicle is not in Guided mode or Auto-Guided mode
-        if (!copter.flightmode->in_guided_mode()) {
+        if (!copter.flightmode->in_custom_mode()) {
             break;
         }
 
@@ -1151,7 +1151,7 @@ void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
         }
 
         // check if the message's thrust field should be interpreted as a climb rate or as thrust
-        const bool use_thrust = copter.mode_guided.set_attitude_target_provides_thrust();
+        const bool use_thrust = copter.mode_custom.set_attitude_target_provides_thrust();
 
         float climb_rate_or_thrust;
         if (use_thrust) {
@@ -1182,7 +1182,7 @@ void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
             ang_vel.z = packet.body_yaw_rate;
         }
 
-        copter.mode_guided.set_angle(attitude_quat, ang_vel,
+        copter.mode_custom.set_angle(attitude_quat, ang_vel,
                 climb_rate_or_thrust, use_thrust);
 
         break;
