@@ -241,8 +241,8 @@ singleton AP_Vehicle method nav_scripting_enable boolean uint8_t 0 UINT8_MAX
 singleton AP_Vehicle method set_velocity_match boolean Vector2f
 singleton AP_Vehicle method has_ekf_failsafed boolean
 singleton AP_Vehicle method get_reversed boolean
-singleton AP_Vehicle method command_long uint8_t mavlink_command_long_t
-singleton AP_Vehicle method command_int uint8_t mavlink_command_int_t
+singleton AP_Vehicle method command_long MAV_RESULT'enum 0 MAV_RESULT_ENUM_END-1 mavlink_command_long_t
+singleton AP_Vehicle method command_int MAV_RESULT'enum 0 MAV_RESULT_ENUM_END-1 mavlink_command_int_t
 
 include AP_SerialLED/AP_SerialLED.h
 singleton AP_SerialLED rename serialLED

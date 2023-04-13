@@ -372,7 +372,7 @@ int AP_HAL__I2CDevice_read_registers(lua_State *L) {
 }
 
 static int lua_mavlink_register_command_long(lua_State *L) {
-    binding_argcheck(L, 2);
+    binding_argcheck(L, 0);
 
     const int command_in = luaL_checkinteger(L, 1);
     luaL_argcheck(L, ((command_in >= 0) && (command_in < INT16_MAX)), 1, "command out of range");
@@ -401,7 +401,7 @@ static int lua_mavlink_register_command_long(lua_State *L) {
 }
 
 static int lua_mavlink_register_command_int(lua_State *L) {
-    binding_argcheck(L, 2);
+    binding_argcheck(L, 0);
 
     const int command_in = luaL_checkinteger(L, 1);
     luaL_argcheck(L, ((command_in >= 0) && (command_in < INT16_MAX)), 1, "command out of range");
