@@ -48,7 +48,7 @@ void command_long_buffer::send_ack(MAV_RESULT result) {
 
 // send ack to a given channel
 void command_long_buffer::send_chan_ack(MAV_RESULT result, mavlink_channel_t chan) {
-    mavlink_msg_command_ack_send(chan, watch, result);
+    mavlink_msg_command_ack_send(chan, watch, result, 0, 0, 0, 0);
 }
 
 // Add a new buffer to the linked list
@@ -98,5 +98,5 @@ void command_int_buffer::send_ack(MAV_RESULT result) {
 
 // send ack to a given channel
 void command_int_buffer::send_chan_ack(MAV_RESULT result, mavlink_channel_t chan) {
-    mavlink_msg_command_ack_send(chan, watch, result);
+    mavlink_msg_command_ack_send(chan, watch, result, 0, 0, 0, 0);
 }
