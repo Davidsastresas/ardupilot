@@ -7,6 +7,7 @@
 #include <AP_Scheduler/AP_Scheduler.h>
 #include <AP_AHRS/AP_AHRS.h>
 #include <AP_Mount/AP_Mount.h>
+#include <AP_Math/AP_Math.h>
 
 #include "AC_PrecLand_Backend.h"
 #include "AC_PrecLand_Companion.h"
@@ -294,13 +295,15 @@ void AC_PrecLand::update(float rangefinder_alt_cm, bool rangefinder_alt_valid)
         if (mount != nullptr) {
             float roll_deg, pitch_deg, yaw_bf_deg;
             if (mount->get_attitude_euler(0, roll_deg, pitch_deg, yaw_bf_deg)) {
-                // Convert from degrees to radiansF
-                const float roll_rad = radians(roll_deg);
-                const float pitch_rad = radians(pitch_deg);
-                const float yaw_rad = radians(yaw_bf_deg);
+                // Get the mount's attitude as a quaternion
+                Quaternion mount_quat;
+                mount_quat.from_euler(radians(roll_deg), radians(pitch_deg), radians(yaw_bf_deg));
                 
-                // Create rotation matrix from euler angles
-                inertial_data_newest.Tbn.from_euler(roll_rad, pitch_rad, yaw_rad);
+                // Convert quaternion to rotation matrix
+                // This gives us the rotation from body to NED frame
+                Matrix3f rotation_matrix;
+                mount_quat.rotation_matrix(rotation_matrix);
+                inertial_data_newest.Tbn = rotation_matrix;
             } else {
                 // Fall back to AHRS if mount attitude not available
                 inertial_data_newest.Tbn = _ahrs.get_rotation_body_to_ned();
