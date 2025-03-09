@@ -116,6 +116,7 @@ public:
 
     bool allow_precland_after_reposition() const { return _options & PLND_OPTION_PRECLAND_AFTER_REPOSITION; }
     bool do_fast_descend() const { return _options & PLND_OPTION_FAST_DESCEND; }
+    bool use_mount_attitude() const { return _options & PLND_OPTION_USE_MOUNT_ATTITUDE; }
 
     /*
       get target location lat/lon. Note that altitude in returned
@@ -160,6 +161,7 @@ private:
         PLND_OPTION_MOVING_TARGET = (1 << 0),
         PLND_OPTION_PRECLAND_AFTER_REPOSITION = (1 << 1),
         PLND_OPTION_FAST_DESCEND = (1 << 2),
+        PLND_OPTION_USE_MOUNT_ATTITUDE = (1 << 3),
     };
 
     // check the status of the target

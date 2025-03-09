@@ -6,6 +6,7 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_Scheduler/AP_Scheduler.h>
 #include <AP_AHRS/AP_AHRS.h>
+#include <AP_Mount/AP_Mount.h>
 
 #include "AC_PrecLand_Backend.h"
 #include "AC_PrecLand_Companion.h"
@@ -178,7 +179,7 @@ const AP_Param::GroupInfo AC_PrecLand::var_info[] = {
     // @Param: OPTIONS
     // @DisplayName: Precision Landing Extra Options
     // @Description: Precision Landing Extra Options
-    // @Bitmask: 0: Moving Landing Target, 1: Allow Precision Landing after manual reposition, 2: Maintain high speed in final descent
+    // @Bitmask: 0: Moving Landing Target, 1: Allow Precision Landing after manual reposition, 2: Maintain high speed in final descent, 3: Use mount attitude for inertial data
     // @User: Advanced
     AP_GROUPINFO("OPTIONS", 17, AC_PrecLand, _options, 0),
 
@@ -285,7 +286,34 @@ void AC_PrecLand::update(float rangefinder_alt_cm, bool rangefinder_alt_valid)
     struct inertial_data_frame_s inertial_data_newest;
     const auto &_ahrs = AP::ahrs();
     _ahrs.getCorrectedDeltaVelocityNED(inertial_data_newest.correctedVehicleDeltaVelocityNED, inertial_data_newest.dt);
-    inertial_data_newest.Tbn = _ahrs.get_rotation_body_to_ned();
+    
+    // Get attitude from mount if option is enabled, otherwise from AHRS
+    if (use_mount_attitude()) {
+        // Try to get attitude from mount (instance 0)
+        AP_Mount *mount = AP::mount();
+        if (mount != nullptr) {
+            float roll_deg, pitch_deg, yaw_bf_deg;
+            if (mount->get_attitude_euler(0, roll_deg, pitch_deg, yaw_bf_deg)) {
+                // Convert from degrees to radiansF
+                const float roll_rad = radians(roll_deg);
+                const float pitch_rad = radians(pitch_deg);
+                const float yaw_rad = radians(yaw_bf_deg);
+                
+                // Create rotation matrix from euler angles
+                inertial_data_newest.Tbn.from_euler(roll_rad, pitch_rad, yaw_rad);
+            } else {
+                // Fall back to AHRS if mount attitude not available
+                inertial_data_newest.Tbn = _ahrs.get_rotation_body_to_ned();
+            }
+        } else {
+            // Fall back to AHRS if mount not available
+            inertial_data_newest.Tbn = _ahrs.get_rotation_body_to_ned();
+        }
+    } else {
+        // Use AHRS attitude
+        inertial_data_newest.Tbn = _ahrs.get_rotation_body_to_ned();
+    }
+    
     Vector3f curr_vel;
     nav_filter_status status;
     if (!_ahrs.get_velocity_NED(curr_vel) || !_ahrs.get_filter_status(status)) {
