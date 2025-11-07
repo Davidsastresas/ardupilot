@@ -1471,9 +1471,6 @@ MAV_MISSION_RESULT AP_Mission::mavlink_int_to_mission_cmd(const mavlink_mission_
         cmd.content.wpnext_offset.yaw_offset_deg = packet.z;
         break;
 
-    case MAV_CMD_DO_SET_ROI_NONE:
-        // no arguments
-        break;
 #endif
 
     default:
@@ -2951,8 +2948,6 @@ const char *AP_Mission::Mission_Command::type() const
 #if AP_MISSION_MAV_CMD_DO_SET_ROI_WPNEXT_OFFSET_ENABLED
     case MAV_CMD_DO_SET_ROI_WPNEXT_OFFSET:
         return "ROIWPNextOffset";
-    case MAV_CMD_DO_SET_ROI_NONE:
-        return "ROINone";
 #endif
     default:
 #if CONFIG_HAL_BOARD == HAL_BOARD_SITL
