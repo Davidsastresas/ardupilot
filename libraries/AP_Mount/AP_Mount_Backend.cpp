@@ -903,6 +903,19 @@ bool AP_Mount_Backend::get_angle_target_to_wpnext_offset(MountTarget& angle_rad)
         return false;
     }
 
+    // check distance to waypoint to avoid instability when very close
+    Location current_loc;
+    if (AP::ahrs().get_location(current_loc)) {
+        const float dist_to_wp = current_loc.get_distance(wp_loc);
+        // minimum stable distance threshold (4 meters)
+        // when closer than this, angles become unstable and yaw behaves erratically
+        const float MIN_STABLE_DISTANCE_M = 4.0f;
+        if (dist_to_wp < MIN_STABLE_DISTANCE_M) {
+            // too close to waypoint, hold current gimbal position
+            return false;
+        }
+    }
+
     if (!get_angle_target_to_location(wp_loc, angle_rad)) {
         return false;
     }
